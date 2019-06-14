@@ -1,3 +1,6 @@
+#module utilisant Empire comme base, pas d'overlapping des musiques
+# press num0 ou space pour differentes musique (si path correspondant)
+
 import pygame
 from pygame import mixer
 import os, inspect
