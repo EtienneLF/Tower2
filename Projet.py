@@ -12,34 +12,54 @@ scriptPATH = os.path.abspath(inspect.getsourcefile(lambda: 0))  # compatible int
 scriptDIR = os.path.dirname(scriptPATH)
 assets = os.path.join(scriptDIR, "data")
 
-Map_Base = pygame.image.load(os.path.join(assets, "Carte.jpg"))
-Map_Neige = pygame.image.load(os.path.join(assets, "Glace.PNG"))
-Map_Lave = pygame.image.load(os.path.join(assets, "Lave.PNG"))
-
-Fond = Map_Base
+Map_Base_Image = pygame.image.load(os.path.join(assets, "Carte.jpg"))
+Map_Glace_Image = pygame.image.load(os.path.join(assets, "Glace.PNG"))
+Map_Lave_Image = pygame.image.load(os.path.join(assets, "Lave.PNG"))
 
 
-screenWidth = 1000
-screenHeight = 800
-
-Perso_Hero = Hero(screenWidth / 2 - 50, screenHeight / 2 - 53)
-
+# Création salle de base
 Megumin = Pnj(1125, 450, "Megumin.png", "Bonjour EXPLOSION")
 Megumin.aImage = pygame.transform.scale(Megumin.aImage, (100, 160))
 
 Mob_1 = Mob(0, 0, 100, "Megumin.png")
 Mob_1.aImage = pygame.transform.scale(Megumin.aImage, (100, 160))
 
-J_x_decor = 500
-J_y_decor = 500  # Fond.get_height()- screenHeight&
+J_x_decor_Base = 500
+J_y_decor_Base = 500  # Fond.get_height()- screenHeight&
 
-# Les différentes listes
+Pnj_List_Base = [Megumin]
 
-Pnj_List = [Megumin]
+Mob_List_Base = [Mob_1]
 
-Mob_List = [Mob_1]
+Item_List_Base =[]
 
-Item_List =[]
+Hitbox_Base = []
+
+Map_Base = Salle(Pnj_List_Base,Mob_List_Base,Item_List_Base,Map_Base_Image,J_x_decor_Base,J_y_decor_Base,Hitbox_Base)
+
+# Création salle dde glace
+Pnj_List_Glace = []
+
+Mob_List_Glace = []
+
+Item_List_Glace =[]
+
+Hitbox_Glace = []
+
+J_x_decor_Glace = 0
+J_y_decor_Glace = 0
+
+Map_Glace = Salle(Pnj_List_Glace, Mob_List_Glace, Item_List_Glace, Map_Glace_Image, J_x_decor_Glace, J_y_decor_Glace, Hitbox_Glace)
+
+
+
+CurrentMap = Map_Glace
+Fond = CurrentMap.a_Image
+screenWidth = CurrentMap.a_Image.get_width()
+screenHeight = CurrentMap.a_Image.get_height()
+
+Perso_Hero = Hero(50,50)#Hero(screenWidth / 2 - 50, screenHeight / 2 - 53)
+
 
 
 ###################################################################################
@@ -82,9 +102,9 @@ while not done:
                 if Perso_Hero.aY < screenHeight / 2 - 53:
                     Perso_Hero.aY = screenHeight / 2 - 53
             else:
-                J_y_decor -= Perso_Hero.vitesse
-                if J_y_decor < 0:
-                    J_y_decor = 0
+                CurrentMap.a_YDecor -= Perso_Hero.vitesse
+                if CurrentMap.a_YDecor < 0:
+                    CurrentMap.a_YDecor = 0
                     Perso_Hero.aY -= Perso_Hero.vitesse
 
         if KeysPressed[pygame.K_DOWN]:
@@ -94,9 +114,9 @@ while not done:
                 if Perso_Hero.aY > screenHeight / 2 - 53:
                     Perso_Hero.aY = screenHeight / 2 - 53
             else:
-                J_y_decor += Perso_Hero.vitesse
-                if J_y_decor + screenHeight > Fond.get_height():
-                    J_y_decor = Fond.get_height() - screenHeight
+                CurrentMap.a_YDecor += Perso_Hero.vitesse
+                if CurrentMap.a_YDecor + screenHeight > Fond.get_height():
+                    CurrentMap.a_YDecor = Fond.get_height() - screenHeight
                     Perso_Hero.aY += Perso_Hero.vitesse
 
         if KeysPressed[pygame.K_LEFT]:
@@ -106,21 +126,21 @@ while not done:
                 if Perso_Hero.aX < screenWidth / 2 - 50:
                     Perso_Hero.aX = screenWidth / 2 - 50
             else:
-                J_x_decor -= Perso_Hero.vitesse
-                if J_x_decor < 0:
-                    J_x_decor = 0
+                CurrentMap.a_XDecor -= Perso_Hero.vitesse
+                if CurrentMap.a_XDecor < 0:
+                    CurrentMap.a_XDecor = 0
                     Perso_Hero.aX -= Perso_Hero.vitesse
 
         if KeysPressed[pygame.K_RIGHT]:
             Perso_Hero.changei("HeroD")
             if Perso_Hero.aX < screenWidth / 2 - 50:
                 Perso_Hero.aX += Perso_Hero.vitesse
-            if Perso_Hero.aX > screenWidth / 2 - 50:
-                Perso_Hero.aX = screenWidth / 2 - 50
+                if Perso_Hero.aX > screenWidth / 2 - 50:
+                    Perso_Hero.aX = screenWidth / 2 - 50
             else:
-                J_x_decor += Perso_Hero.vitesse
-                if J_x_decor + screenWidth > Fond.get_width():
-                    J_x_decor = Fond.get_width() - screenWidth
+                CurrentMap.a_XDecor += Perso_Hero.vitesse
+                if CurrentMap.a_XDecor + screenWidth > Fond.get_width():
+                    CurrentMap.a_XDecor = Fond.get_width() - screenWidth
                     Perso_Hero.aX += Perso_Hero.vitesse
     else:
         Perso_Hero.aDuree -= 1
@@ -136,20 +156,20 @@ while not done:
 
     if event.type == pygame.MOUSEBUTTONDOWN:
         Perso_Hero.attaque()
-        for one_Mob in Mob_List:
+        for one_Mob in CurrentMap.a_Mob_List:
             one_Mob.getattack(Perso_Hero)
 
-    for one_Pnj in Pnj_List:
-        Perso_Hero.dialogue(one_Pnj, J_x_decor)
+    for one_Pnj in CurrentMap.a_Pnj_List:
+        Perso_Hero.dialogue(one_Pnj, CurrentMap.a_XDecor)
     # Creation d'une zone
-    ZoneCam = pygame.Rect(J_x_decor, J_y_decor, screenWidth, screenHeight)
+    ZoneCam = pygame.Rect(CurrentMap.a_XDecor, CurrentMap.a_YDecor, screenWidth, screenHeight)
     screen.blit(Fond, (0, 0), area=ZoneCam)
 
-    for one_Pnj in Pnj_List:
-        screen.blit(one_Pnj.aImage, (one_Pnj.aX - J_x_decor, one_Pnj.aY - J_y_decor))
-    for one_Mob in Mob_List:
+    for one_Pnj in CurrentMap.a_Pnj_List:
+        screen.blit(one_Pnj.aImage, (one_Pnj.aX - CurrentMap.a_XDecor, one_Pnj.aY - CurrentMap.a_YDecor))
+    for one_Mob in CurrentMap.a_Mob_List:
         if one_Mob.a_health > 0:
-            screen.blit(one_Mob.aImage, (one_Mob.aX - J_x_decor, one_Mob.aY - J_y_decor))
+            screen.blit(one_Mob.aImage, (one_Mob.aX - CurrentMap.a_XDecor, one_Mob.aY - CurrentMap.a_YDecor))
     # Affiche le perso
     screen.blit(Perso_Hero.aImage, (Perso_Hero.aX, Perso_Hero.aY))
 
