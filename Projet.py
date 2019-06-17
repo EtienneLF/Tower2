@@ -54,8 +54,19 @@ Mob_1 = Mob(0, 0, 100, "Megumin.png")
 Mob_1.aImage = pygame.transform.scale(Megumin.aImage, (100, 160))
 
 # Création cailloux
-Glace_Cailloux1 = Cailloux(300, 300)
-
+Glace_Cailloux1 = Cailloux(303, 297)
+Glace_Cailloux2 = Cailloux(417, 356)
+Glace_Cailloux3 = Cailloux(475, 409)
+Glace_Cailloux4 = Cailloux(65, 349)
+Glace_Cailloux5 = Cailloux(241, 472)
+Glace_Cailloux6 = Cailloux(650, 472)
+Glace_Cailloux7 = Cailloux(828, 62)
+Glace_Cailloux8 = Cailloux(886 , 296)
+Glace_Cailloux9 = Cailloux(418 , 588)
+Glace_Cailloux10 = Cailloux(535 , 588)
+Glace_Cailloux11 = Cailloux(651 , 588)
+Glace_Cailloux12 = Cailloux(300 , 588)
+Glace_Cailloux13 = Cailloux(944, 117)
 # Position de la fenêtre
 J_x_decor_Base = 0
 J_y_decor_Base = 0
@@ -81,7 +92,7 @@ Mob_List_Glace = []
 
 Item_List_Glace = []
 
-Hitbox_Glace = [Glace_Cailloux1]
+Hitbox_Glace = [Glace_Cailloux1,Glace_Cailloux2,Glace_Cailloux3,Glace_Cailloux4,Glace_Cailloux5,Glace_Cailloux6,Glace_Cailloux7,Glace_Cailloux8,Glace_Cailloux9,Glace_Cailloux10,Glace_Cailloux11,Glace_Cailloux12,Glace_Cailloux13]
 
 J_x_decor_Glace = 0
 J_y_decor_Glace = 0
@@ -231,7 +242,9 @@ while not done:
     for onecailloux in CurrentMap.a_Tab_Hitbox :
         onecailloux.affiche_aX = onecailloux.aX - CurrentMap.a_XDecor
         onecailloux.affiche_aY = onecailloux.aY - CurrentMap.a_YDecor
-        pygame.draw.rect(screen, (255, 0, 0), (Glace_Cailloux1.affiche_aX, Glace_Cailloux1.affiche_aY, 50, 60), 2)
+        pygame.draw.rect(screen, (255, 0, 0), (onecailloux.affiche_aX, onecailloux.affiche_aY, 50, 60), 2)
+
+
 
     for one_marchant in CurrentMap.a_Marchand_Liste:
         QuelMarchand = Perso_Hero.ismarchand(one_marchant, CurrentMap .a_XDecor, CurrentMap.a_YDecor)
