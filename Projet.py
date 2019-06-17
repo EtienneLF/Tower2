@@ -9,6 +9,7 @@ from Class.Perso import Pnj, MarchandArme, MarchandMagie
 from Class.Salle import Salle, ChangeSalle
 from Class.Shop import Shop
 from Class.Item import Epee, Bottes, Armure
+from Class.Cailloux import Cailloux
 
 # recherche du repertoire de travail bonjour
 
@@ -52,6 +53,9 @@ Megumin.aImage = pygame.transform.scale(Megumin.aImage, (100, 160))
 Mob_1 = Mob(0, 0, 100, "Megumin.png")
 Mob_1.aImage = pygame.transform.scale(Megumin.aImage, (100, 160))
 
+# Création cailloux
+Glace_Cailloux1 = Cailloux(300, 300)
+
 # Position de la fenêtre
 J_x_decor_Base = 0
 J_y_decor_Base = 0
@@ -77,7 +81,7 @@ Mob_List_Glace = []
 
 Item_List_Glace = []
 
-Hitbox_Glace = []
+Hitbox_Glace = [Glace_Cailloux1]
 
 J_x_decor_Glace = 0
 J_y_decor_Glace = 0
@@ -90,7 +94,7 @@ Map_Glace = Salle(Pnj_List_Glace, Mob_List_Glace, Item_List_Glace, Map_Glace_Ima
 
 
 # Déclaration des sorties
-Sortie_Glace_Base = ChangeSalle(300, 300, "paillasson.png", Map_Base, 500, 500, 0, 0)
+Sortie_Glace_Base = ChangeSalle(150, 350, "paillasson.png", Map_Base, 500, 500, 0, 0)
 Sortie_Base_Glace = ChangeSalle(100, 100, "paillasson.png", Map_Glace, 0, 0, 500, 0)
 
 # On met les sorties dans chaque Salle
@@ -222,6 +226,12 @@ while not done:
         Perso_Hero.aX = screenWidth - Perso_Hero.aImage.get_width()
     if Perso_Hero.aY + Perso_Hero.aImage.get_height() > screenHeight:
         Perso_Hero.aY = screenHeight - Perso_Hero.aImage.get_height()
+    herohitbox = (Perso_Hero.aX + 5, Perso_Hero.aY, 50, 60)
+
+    for onecailloux in CurrentMap.a_Tab_Hitbox :
+        onecailloux.affiche_aX = onecailloux.aX - CurrentMap.a_XDecor
+        onecailloux.affiche_aY = onecailloux.aY - CurrentMap.a_YDecor
+        pygame.draw.rect(screen, (255, 0, 0), (Glace_Cailloux1.affiche_aX, Glace_Cailloux1.affiche_aY, 50, 60), 2)
 
     for one_marchant in CurrentMap.a_Marchand_Liste:
         QuelMarchand = Perso_Hero.ismarchand(one_marchant, CurrentMap .a_XDecor, CurrentMap.a_YDecor)
@@ -287,7 +297,7 @@ while not done:
 
 # Affiche le perso
     screen.blit(Perso_Hero.aImage, (Perso_Hero.aX, Perso_Hero.aY))
-
+    pygame.draw.rect(screen, (255, 0, 0), herohitbox, 2)
 # Affichage de chaque pnj / Mob et Sortie de la pièce courante
     for one_Pnj in CurrentMap.a_Pnj_List:
         screen.blit(one_Pnj.aImage, (one_Pnj.aX - CurrentMap.a_XDecor, one_Pnj.aY - CurrentMap.a_YDecor))
@@ -314,6 +324,9 @@ while not done:
             pygame.draw.line(screen, [255, 255, 255], (10, 193), (589, 193))
             pygame.draw.line(screen, [255, 255, 255], (10, 193 * 2), (589, 193 * 2))
             Marchand_Magie.aShop.dessine(screen)
+
+    for onecailloux in CurrentMap.a_Tab_Hitbox:
+        pygame.draw.rect(screen, (255, 0, 0), (onecailloux.affiche_aX, onecailloux.affiche_aY, 50, 60), 2)
 
     # test pour chaque pnj si le joueur est assez proche pour afficher le dialogue
     for one_Pnj in CurrentMap.a_Pnj_List:

@@ -52,7 +52,7 @@ class Hero(Class.Perso.Perso):
     def __init__(self, px, py):
         Class.Perso.Perso.__init__(self, px, py, "null")
         self.aImage = pygame.image.load(path.join(assets, "Hero.jpg"))
-        self.aImage = pygame.transform.scale(self.aImage, (100, 107))
+        self.aImage = pygame.transform.scale(self.aImage, (50, 50))
 
     def dialogue(self, p_pnj, px, py):
         if self.aX + self.aImage.get_width() > p_pnj.aX - px and self.aX < p_pnj.aX + p_pnj.aImage.get_width() - px and self.aY + self.aImage.get_height() > p_pnj.aY - py and self.aY < p_pnj.aY + p_pnj.aImage.get_height() - py:
@@ -67,7 +67,7 @@ class Hero(Class.Perso.Perso):
 
     def changei(self, p_image):
         self.aImage = pygame.image.load(path.join(assets, p_image + ".jpg"))
-        self.aImage = pygame.transform.scale(self.aImage, (100, 107))
+        self.aImage = pygame.transform.scale(self.aImage, (50, 50))
 
     def attaque(self):
         self.changei("HeroAtt")
