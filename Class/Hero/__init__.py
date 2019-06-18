@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jun 12 10:03:13 2019
-
-@author: Etienne
-"""
-
 import Class.Perso
 import pygame
 import inspect
@@ -39,8 +32,9 @@ class Hero(Class.Perso.Perso):
 
     a_exp = 0
     a_lvl = 1
+    a_exp_lvl_need = 10
 
-    a_gold = 0
+    a_gold = 10
     a_weapon = None
     a_boot = None
     a_armor = None
@@ -52,7 +46,7 @@ class Hero(Class.Perso.Perso):
     def __init__(self, px, py):
         Class.Perso.Perso.__init__(self, px, py, "null")
         self.aImage = pygame.image.load(path.join(assets, "Hero.jpg"))
-        self.aImage = pygame.transform.scale(self.aImage, (100, 107))
+        self.aImage = pygame.transform.scale(self.aImage, (50, 50))
 
     def dialogue(self, p_pnj, px, py):
         if self.aX + self.aImage.get_width() > p_pnj.aX - px and self.aX < p_pnj.aX + p_pnj.aImage.get_width() - px and self.aY + self.aImage.get_height() > p_pnj.aY - py and self.aY < p_pnj.aY + p_pnj.aImage.get_height() - py:
@@ -67,7 +61,7 @@ class Hero(Class.Perso.Perso):
 
     def changei(self, p_image):
         self.aImage = pygame.image.load(path.join(assets, p_image + ".jpg"))
-        self.aImage = pygame.transform.scale(self.aImage, (100, 107))
+        self.aImage = pygame.transform.scale(self.aImage, (50, 50))
 
     def attaque(self):
         self.changei("HeroAtt")
@@ -81,3 +75,9 @@ class Hero(Class.Perso.Perso):
             self.vitesse = self.a_boot.a_Stat + self.vitesse_base
         if self.a_armor is not None:
             self.a_def = self.a_armor.a_Stat + self.a_def_base
+
+    def actulvl(self):
+        if self.a_exp >= self.a_exp_lvl_need:
+            self.a_lvl += 1
+            self.a_exp = 0
+            self.a_exp_lvl_need *= 1.5
