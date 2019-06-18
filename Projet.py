@@ -9,6 +9,7 @@ from Class.Perso import Pnj, MarchandArme, MarchandMagie
 from Class.Salle import Salle, ChangeSalle
 from Class.Shop import Shop
 from Class.Item import Epee, Bottes, Armure
+from Class.Cailloux import Cailloux
 
 # recherche du repertoire de travail bonjour
 
@@ -49,8 +50,50 @@ Megumin = Pnj(1125, 450, "Megumin.png", "Bonjour EXPLOSION", "Megumin")
 Megumin.aImage = pygame.transform.scale(Megumin.aImage, (100, 160))
 
 # Mob
-Mob_1 = Mob(0, 0, 100, "Megumin.png")
+Mob_1 = Mob(500, 500, 100, "Megumin.png", 5, 100, 10, 50)
 Mob_1.aImage = pygame.transform.scale(Megumin.aImage, (100, 160))
+
+# Création cailloux
+Glace_Cailloux1 = Cailloux(303, 297)
+Glace_Cailloux2 = Cailloux(417, 356)
+Glace_Cailloux3 = Cailloux(475, 409)
+Glace_Cailloux4 = Cailloux(65, 349)
+Glace_Cailloux5 = Cailloux(241, 472)
+Glace_Cailloux6 = Cailloux(650, 472)
+Glace_Cailloux7 = Cailloux(828, 62)
+Glace_Cailloux8 = Cailloux(886, 296)
+Glace_Cailloux9 = Cailloux(418, 588)
+Glace_Cailloux10 = Cailloux(535, 588)
+Glace_Cailloux11 = Cailloux(652, 588)
+Glace_Cailloux12 = Cailloux(300, 588)
+Glace_Cailloux13 = Cailloux(944, 117)
+Glace_Cailloux14 = Cailloux(241, 4)
+Glace_Cailloux15 = Cailloux(299, 63)
+Glace_Cailloux16 = Cailloux(361, 120)
+Glace_Cailloux17 = Cailloux(421, 182)
+Glace_Cailloux18 = Cailloux(535, 182)
+Glace_Cailloux19 = Cailloux(593, 120)
+Glace_Cailloux20 = Cailloux(652, 63)
+Glace_Cailloux21 = Cailloux(711, 4)
+Glace_Cailloux22 = Cailloux(945, 409)
+Glace_Cailloux23 = Cailloux(886, 530)
+Glace_Cailloux24 = Cailloux(593, 640)
+Glace_Cailloux25 = Cailloux(361, 640)
+Glace_Cailloux26 = Cailloux(125, 588)
+Glace_Cailloux27 = Cailloux(125, 642)
+Glace_Cailloux28 = Cailloux(828, 645)
+Glace_Cailloux29 = Cailloux(299, 1)
+Glace_Cailloux30 = Cailloux(361, 56)
+Glace_Cailloux31 = Cailloux(652, 1)
+Glace_Cailloux32 = Cailloux(593, 56)
+Glace_Cailloux33 = Cailloux(241, 585)
+Glace_Cailloux34 = Cailloux(241, 635)
+Glace_Cailloux35 = Cailloux(705, 585)
+Glace_Cailloux36 = Cailloux(705, 635)
+Glace_Cailloux37 = Cailloux(180, 646)
+Glace_Cailloux38 = Cailloux(180, 704)
+Glace_Cailloux39 = Cailloux(768, 646)
+Glace_Cailloux40 = Cailloux(768, 704)
 
 # Position de la fenêtre
 J_x_decor_Base = 0
@@ -77,7 +120,7 @@ Mob_List_Glace = []
 
 Item_List_Glace = []
 
-Hitbox_Glace = []
+Hitbox_Glace = [Glace_Cailloux1, Glace_Cailloux2, Glace_Cailloux3, Glace_Cailloux4, Glace_Cailloux5, Glace_Cailloux6, Glace_Cailloux7, Glace_Cailloux8,Glace_Cailloux9,Glace_Cailloux10,Glace_Cailloux11,Glace_Cailloux12,Glace_Cailloux13,Glace_Cailloux14,Glace_Cailloux15,Glace_Cailloux16,Glace_Cailloux17,Glace_Cailloux18,Glace_Cailloux19,Glace_Cailloux20,Glace_Cailloux21,Glace_Cailloux22,Glace_Cailloux23,Glace_Cailloux24,Glace_Cailloux25,Glace_Cailloux26,Glace_Cailloux27,Glace_Cailloux28,Glace_Cailloux29,Glace_Cailloux30,Glace_Cailloux31,Glace_Cailloux32,Glace_Cailloux33,Glace_Cailloux34,Glace_Cailloux35,Glace_Cailloux36,Glace_Cailloux37,Glace_Cailloux38,Glace_Cailloux39,Glace_Cailloux40]
 
 J_x_decor_Glace = 0
 J_y_decor_Glace = 0
@@ -90,7 +133,7 @@ Map_Glace = Salle(Pnj_List_Glace, Mob_List_Glace, Item_List_Glace, Map_Glace_Ima
 
 
 # Déclaration des sorties
-Sortie_Glace_Base = ChangeSalle(300, 300, "paillasson.png", Map_Base, 500, 500, 0, 0)
+Sortie_Glace_Base = ChangeSalle(150, 350, "paillasson.png", Map_Base, 500, 500, 0, 0)
 Sortie_Base_Glace = ChangeSalle(100, 100, "paillasson.png", Map_Glace, 0, 0, 500, 0)
 
 # On met les sorties dans chaque Salle
@@ -106,7 +149,7 @@ screenHeight = 600
 Dialogue_x = 200
 Dialogue_Y = 200
 
-Perso_Hero = Hero(250, 250)   # Hero(screenWidth / 2 - 50, screenHeight / 2 - 53)
+Perso_Hero = Hero(250, 250)   # Hero(screenWidth / 2 - 50, screenHeight / 2 - 50)
 
 # Attribut pour savoir si on a ouvert un shop
 AucunShop = 0
@@ -121,9 +164,9 @@ def equipe(p_hero, p_item):
     if p_item.ckoi() == "Epee":
         p_hero.a_weapon = p_item
     elif p_item.ckoi() == "Bottes":
-        p_hero.a_armor = p_item
-    else:
         p_hero.a_boot = p_item
+    else:
+        p_hero.a_armor = p_item
     Perso_Hero.actustat()
 
 
@@ -133,6 +176,7 @@ pygame.init()
 
 # set police for text
 text_font = pygame.font.SysFont("arial", 50)
+Gold_font = pygame.font.SysFont("arial", 20)
 
 # Set the width and height of the screen [width,height]
 screen = pygame.display.set_mode((screenWidth, screenHeight))
@@ -164,10 +208,10 @@ while not done:
 
         if KeysPressed[pygame.K_UP]:
             Perso_Hero.changei("HeroH")
-            if Perso_Hero.aY > screenHeight / 2 - 53:
+            if Perso_Hero.aY > screenHeight / 2 - 25:
                 Perso_Hero.aY -= Perso_Hero.vitesse
-                if Perso_Hero.aY < screenHeight / 2 - 53:
-                    Perso_Hero.aY = screenHeight / 2 - 53
+                if Perso_Hero.aY < screenHeight / 2 - 25:
+                    Perso_Hero.aY = screenHeight / 2 - 25
             else:
                 CurrentMap.a_YDecor -= Perso_Hero.vitesse
                 if CurrentMap.a_YDecor < 0:
@@ -176,10 +220,10 @@ while not done:
 
         if KeysPressed[pygame.K_DOWN]:
             Perso_Hero.changei("Hero")
-            if Perso_Hero.aY < screenHeight / 2 - 53:
+            if Perso_Hero.aY < screenHeight / 2 - 25:
                 Perso_Hero.aY += Perso_Hero.vitesse
-                if Perso_Hero.aY > screenHeight / 2 - 53:
-                    Perso_Hero.aY = screenHeight / 2 - 53
+                if Perso_Hero.aY > screenHeight / 2 - 25:
+                    Perso_Hero.aY = screenHeight / 2 - 25
             else:
                 CurrentMap.a_YDecor += Perso_Hero.vitesse
                 if CurrentMap.a_YDecor + screenHeight > Fond.get_height():
@@ -188,10 +232,10 @@ while not done:
 
         if KeysPressed[pygame.K_LEFT]:
             Perso_Hero.changei("HeroG")
-            if Perso_Hero.aX > screenWidth / 2 - 50:
+            if Perso_Hero.aX > screenWidth / 2 - 25:
                 Perso_Hero.aX -= Perso_Hero.vitesse
-                if Perso_Hero.aX < screenWidth / 2 - 50:
-                    Perso_Hero.aX = screenWidth / 2 - 50
+                if Perso_Hero.aX < screenWidth / 2 - 25:
+                    Perso_Hero.aX = screenWidth / 2 - 25
             else:
                 CurrentMap.a_XDecor -= Perso_Hero.vitesse
                 if CurrentMap.a_XDecor < 0:
@@ -200,10 +244,10 @@ while not done:
 
         if KeysPressed[pygame.K_RIGHT]:
             Perso_Hero.changei("HeroD")
-            if Perso_Hero.aX < screenWidth / 2 - 50:
+            if Perso_Hero.aX < screenWidth / 2 - 25:
                 Perso_Hero.aX += Perso_Hero.vitesse
-                if Perso_Hero.aX > screenWidth / 2 - 50:
-                    Perso_Hero.aX = screenWidth / 2 - 50
+                if Perso_Hero.aX > screenWidth / 2 - 25:
+                    Perso_Hero.aX = screenWidth / 2 - 25
             else:
                 CurrentMap.a_XDecor += Perso_Hero.vitesse
                 if CurrentMap.a_XDecor + screenWidth > Fond.get_width():
@@ -222,6 +266,12 @@ while not done:
         Perso_Hero.aX = screenWidth - Perso_Hero.aImage.get_width()
     if Perso_Hero.aY + Perso_Hero.aImage.get_height() > screenHeight:
         Perso_Hero.aY = screenHeight - Perso_Hero.aImage.get_height()
+    hero_hitbox = (Perso_Hero.aX + 5, Perso_Hero.aY, 50, 60)
+
+    for onecailloux in CurrentMap.a_Tab_Hitbox:
+        onecailloux.affiche_aX = onecailloux.aX - CurrentMap.a_XDecor
+        onecailloux.affiche_aY = onecailloux.aY - CurrentMap.a_YDecor
+        pygame.draw.rect(screen, (255, 0, 0), (onecailloux.affiche_aX, onecailloux.affiche_aY, 50, 60), 2)
 
     for one_marchant in CurrentMap.a_Marchand_Liste:
         QuelMarchand = Perso_Hero.ismarchand(one_marchant, CurrentMap .a_XDecor, CurrentMap.a_YDecor)
@@ -240,36 +290,53 @@ while not done:
             print("Achat arme")
             pos = pygame.mouse.get_pos()
             y = pos[1]
-            if 10 <= y <= 193 and Perso_Hero.a_gold:
+            if 10 <= y <= 193:
                 if Shop_Arme_Base.a_Item1 is not None:
-                    equipe(Perso_Hero, Shop_Arme_Base.a_Item1)
-                    Shop_Arme_Base.a_Item1 = None
+                    if Perso_Hero.a_gold >= Shop_Arme_Base.a_Item1.a_Prix:
+                        Perso_Hero.a_gold -= Shop_Arme_Base.a_Item1.a_Prix
+                        equipe(Perso_Hero, Shop_Arme_Base.a_Item1)
+                        Shop_Arme_Base.a_Item1 = None
             elif 193 <= y <= 193*2:
                 if Shop_Arme_Base.a_Item2 is not None:
-                    equipe(Perso_Hero, Shop_Arme_Base.a_Item2)
-                    Shop_Arme_Base.a_Item2 = None
+                    if Perso_Hero.a_gold >= Shop_Arme_Base.a_Item2.a_Prix:
+                        Perso_Hero.a_gold -= Shop_Arme_Base.a_Item2.a_Prix
+                        equipe(Perso_Hero, Shop_Arme_Base.a_Item2)
+                        Shop_Arme_Base.a_Item2 = None
             elif 193*2 <= y <= 193*3:
                 if Shop_Arme_Base.a_Item3 is not None:
-                    equipe(Perso_Hero, Shop_Arme_Base.a_Item3)
-                    Shop_Arme_Base.a_Item3 = None
-
+                    if Perso_Hero.a_gold >= Shop_Arme_Base.a_Item3.a_Prix:
+                        Perso_Hero.a_gold -= Shop_Arme_Base.a_Item3.a_Prix
+                        equipe(Perso_Hero, Shop_Arme_Base.a_Item3)
+                        Shop_Arme_Base.a_Item3 = None
     elif CurrentShop == Shop_Magie:
         if event.type == pygame.MOUSEBUTTONDOWN:
             print("Achat magie")
             pos = pygame.mouse.get_pos()
             y = pos[1]
             if 10 <= y <= 193:
-                Shop_Magie_Base.a_Item1 = None
+                if Shop_Magie_Base.a_Item1 is not None:
+                    if Perso_Hero.a_gold >= Shop_Magie_Base.a_Item1.a_Prix:
+                        Perso_Hero.a_gold -= Shop_Magie_Base.a_Item1.a_Prix
+                        equipe(Perso_Hero, Shop_Magie_Base.a_Item1)
+                        Shop_Magie_Base.a_Item1 = None
             elif 193 <= y <= 193*2:
-                Shop_Magie_Base.a_Item2 = None
+                if Shop_Magie_Base.a_Item2 is not None:
+                    if Perso_Hero.a_gold >= Shop_Magie_Base.a_Item2.a_Prix:
+                        Perso_Hero.a_gold -= Shop_Magie_Base.a_Item2.a_Prix
+                        equipe(Perso_Hero, Shop_Magie_Base.a_Item2)
+                        Shop_Magie_Base.a_Item2 = None
             elif 193*2 <= y <= 193*3:
-                Shop_Magie_Base.a_Item3 = None
+                if Shop_Magie_Base.a_Item3 is not None:
+                    if Perso_Hero.a_gold >= Shop_Magie_Base.a_Item3.a_Prix:
+                        Perso_Hero.a_gold -= Shop_Magie_Base.a_Item3.a_Prix
+                        equipe(Perso_Hero, Shop_Magie_Base.a_Item3)
+                        Shop_Magie_Base.a_Item3 = None
     else:
         # Test si clic gauche, si oui met le sprite attaque et test si un mob est proche
         if event.type == pygame.MOUSEBUTTONDOWN and Perso_Hero.a_Duree == 0:
             Perso_Hero.attaque()
             for one_Mob in CurrentMap.a_Mob_List:
-                one_Mob.getattack(Perso_Hero)
+                one_Mob.getattack(Perso_Hero, CurrentMap.a_XDecor, CurrentMap.a_YDecor)
 
 # Test si le perso est proche de la sortie, si oui le change de salle
     for one_Sortie in CurrentMap.a_Sortie_Liste:
@@ -287,15 +354,18 @@ while not done:
 
 # Affiche le perso
     screen.blit(Perso_Hero.aImage, (Perso_Hero.aX, Perso_Hero.aY))
-
+    pygame.draw.rect(screen, (255, 0, 0), hero_hitbox, 2)
 # Affichage de chaque pnj / Mob et Sortie de la pièce courante
     for one_Pnj in CurrentMap.a_Pnj_List:
         screen.blit(one_Pnj.aImage, (one_Pnj.aX - CurrentMap.a_XDecor, one_Pnj.aY - CurrentMap.a_YDecor))
 
     for one_Mob in CurrentMap.a_Mob_List:
         if one_Mob.a_health > 0:
+            one_Mob.move(Perso_Hero.aX + CurrentMap.a_XDecor, Perso_Hero.aY + CurrentMap.a_YDecor)
+            one_Mob.attaque(Perso_Hero, CurrentMap.a_XDecor, CurrentMap.a_YDecor)
             screen.blit(one_Mob.aImage, (one_Mob.aX - CurrentMap.a_XDecor, one_Mob.aY - CurrentMap.a_YDecor))
         else:
+            Perso_Hero.a_exp += one_Mob.xp
             CurrentMap.a_Mob_List.remove(one_Mob)
     for one_Sortie in CurrentMap.a_Sortie_Liste:
         screen.blit(one_Sortie.a_Image, (one_Sortie.aX - CurrentMap.a_XDecor, one_Sortie.aY - CurrentMap.a_YDecor))
@@ -314,6 +384,21 @@ while not done:
             pygame.draw.line(screen, [255, 255, 255], (10, 193), (589, 193))
             pygame.draw.line(screen, [255, 255, 255], (10, 193 * 2), (589, 193 * 2))
             Marchand_Magie.aShop.dessine(screen)
+
+    for onecailloux in CurrentMap.a_Tab_Hitbox:
+        pygame.draw.rect(screen, (255, 0, 0), (onecailloux.affiche_aX, onecailloux.affiche_aY, 50, 60), 2)
+
+    Perso_Hero.actulvl()
+    lvl_text = Gold_font.render("Niveau : " + str(Perso_Hero.a_lvl), True, [255, 0, 0])
+    screen.blit(lvl_text, (0, 21))
+    exp_text = Gold_font.render("Expérience : " + str(Perso_Hero.a_exp), True, [255, 0, 0])
+    screen.blit(exp_text, (0, 42))
+    expn_text = Gold_font.render("Expérience requise avant prochaine niveau : " + str(Perso_Hero.a_exp_lvl_need), True, [255, 0, 0])
+    screen.blit(expn_text, (0, 63))
+    Health_text = Gold_font.render("Health : " + str(Perso_Hero.a_health), True, [255, 0, 0])
+    screen.blit(Health_text, (0, 0))
+    gold_text = Gold_font.render("Gold : " + str(Perso_Hero.a_gold), True, [255, 0, 255])
+    screen.blit(gold_text, (0, 570))
 
     # test pour chaque pnj si le joueur est assez proche pour afficher le dialogue
     for one_Pnj in CurrentMap.a_Pnj_List:

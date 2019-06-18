@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Jun 11 20:40:43 2019
-
-@author: Etienne
-"""
 import pygame
 import inspect
 from os import path
