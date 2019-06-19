@@ -53,6 +53,12 @@ Megumin.aImage = pygame.transform.scale(Megumin.aImage, (100, 160))
 Mob_1 = Mob(500, 500, 100, "Megumin.png", 5, 100, 10, 50)
 Mob_1.aImage = pygame.transform.scale(Megumin.aImage, (100, 160))
 
+Mob_2 = Mob(600, 500, 100, "Megumin.png", 5, 100, 10, 50)
+Mob_2.aImage = pygame.transform.scale(Megumin.aImage, (100, 160))
+
+Mob_3 = Mob(100, 100, 100, "Megumin.png", 5, 100, 10, 50)
+Mob_3.aImage = pygame.transform.scale(Megumin.aImage, (100, 160))
+
 # Création cailloux
 Glace_Cailloux1 = Cailloux(303, 297)
 Glace_Cailloux2 = Cailloux(417, 356)
@@ -101,7 +107,7 @@ J_y_decor_Base = 0
 
 Pnj_List_Base = [Megumin]
 
-Mob_List_Base = [Mob_1]
+Mob_List_Base = [Mob_1, Mob_2]
 
 Item_List_Base = []
 
@@ -116,7 +122,7 @@ Map_Base = Salle(Pnj_List_Base, Mob_List_Base, Item_List_Base, Map_Base_Image, J
 # Création salle dde glace
 Pnj_List_Glace = []
 
-Mob_List_Glace = []
+Mob_List_Glace = [Mob_3]
 
 Item_List_Glace = []
 
@@ -169,30 +175,6 @@ def equipe(p_hero, p_item):
         p_hero.a_armor = p_item
     Perso_Hero.actustat()
 
-# Fonction pour verifier la hitbox
-def inRects(perso):
-    x,y = perso.aX , perso.aY
-    height,width = perso.aImage.get_height() , perso.aImage.get_width()
-    for onecailloux in Hitbox_Glace:
-        pixel1 = x + width , y
-        pixel2 = x + width , y + height
-        if onecailloux.inRect(pixel1) or onecailloux.inRect(pixel2):
-            return "right"
-        pixel1 = x , y + height
-        pixel2 = x + width , y + height
-        if onecailloux.inRect(pixel1) or onecailloux.inRect(pixel2) :
-            return "down"
-        pixel1 = x , y
-        pixel2 = x , y + height
-        if onecailloux.inRect(pixel1) or onecailloux.inRect(pixel2) :
-            return"left"
-        pixel1 = x , y
-        pixel2 = x + width , y
-        if onecailloux.inRect(pixel1) or onecailloux.inRect(pixel2) :
-            return "top"
-    return "none"
-
-
 
 ###################################################################################
 # Initialize pygame
@@ -229,8 +211,8 @@ while not done:
 
     # Deplacement du Hero si il n'est pas entrain de faire une autre action
     if Perso_Hero.a_Duree == 0:
-        collision = inRects(Perso_Hero)
-        if KeysPressed[pygame.K_UP] and collision != "top" :
+
+        if KeysPressed[pygame.K_UP]:
             Perso_Hero.changei("HeroH")
             if Perso_Hero.aY > screenHeight / 2 - 25:
                 Perso_Hero.aY -= Perso_Hero.vitesse
@@ -242,7 +224,7 @@ while not done:
                     CurrentMap.a_YDecor = 0
                     Perso_Hero.aY -= Perso_Hero.vitesse
 
-        if KeysPressed[pygame.K_DOWN] and collision != "down" :
+        if KeysPressed[pygame.K_DOWN]:
             Perso_Hero.changei("Hero")
             if Perso_Hero.aY < screenHeight / 2 - 25:
                 Perso_Hero.aY += Perso_Hero.vitesse
@@ -254,7 +236,7 @@ while not done:
                     CurrentMap.a_YDecor = Fond.get_height() - screenHeight
                     Perso_Hero.aY += Perso_Hero.vitesse
 
-        if KeysPressed[pygame.K_LEFT] and collision != "left":
+        if KeysPressed[pygame.K_LEFT]:
             Perso_Hero.changei("HeroG")
             if Perso_Hero.aX > screenWidth / 2 - 25:
                 Perso_Hero.aX -= Perso_Hero.vitesse
@@ -266,7 +248,7 @@ while not done:
                     CurrentMap.a_XDecor = 0
                     Perso_Hero.aX -= Perso_Hero.vitesse
 
-        if KeysPressed[pygame.K_RIGHT] and collision != "right":
+        if KeysPressed[pygame.K_RIGHT]:
             Perso_Hero.changei("HeroD")
             if Perso_Hero.aX < screenWidth / 2 - 25:
                 Perso_Hero.aX += Perso_Hero.vitesse
@@ -290,7 +272,7 @@ while not done:
         Perso_Hero.aX = screenWidth - Perso_Hero.aImage.get_width()
     if Perso_Hero.aY + Perso_Hero.aImage.get_height() > screenHeight:
         Perso_Hero.aY = screenHeight - Perso_Hero.aImage.get_height()
-    hero_hitbox = (Perso_Hero.aX , Perso_Hero.aY, Perso_Hero.aImage.get_height(), Perso_Hero.aImage.get_width())
+    hero_hitbox = (Perso_Hero.aX + 5, Perso_Hero.aY, 50, 60)
 
     for onecailloux in CurrentMap.a_Tab_Hitbox:
         onecailloux.affiche_aX = onecailloux.aX - CurrentMap.a_XDecor
@@ -379,6 +361,7 @@ while not done:
 # Affiche le perso
     screen.blit(Perso_Hero.aImage, (Perso_Hero.aX, Perso_Hero.aY))
     pygame.draw.rect(screen, (255, 0, 0), hero_hitbox, 2)
+
 # Affichage de chaque pnj / Mob et Sortie de la pièce courante
     for one_Pnj in CurrentMap.a_Pnj_List:
         screen.blit(one_Pnj.aImage, (one_Pnj.aX - CurrentMap.a_XDecor, one_Pnj.aY - CurrentMap.a_YDecor))
@@ -412,12 +395,36 @@ while not done:
     for onecailloux in CurrentMap.a_Tab_Hitbox:
         pygame.draw.rect(screen, (255, 0, 0), (onecailloux.affiche_aX, onecailloux.affiche_aY, 50, 60), 2)
 
-    Perso_Hero.actulvl()
+
+
+    if Perso_Hero.actulvl():
+        done_lvl = False
+        points_lvl = 10
+        while not done_lvl:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:  # If user clicked close
+                    done_lvl = True
+                    done = True  # Flag that we are done so we exit this loop
+            event_lvl = pygame.event.Event(pygame.USEREVENT)
+            pygame.draw.rect(screen, [0, 0, 0], [10, 10, 580, 580])
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                points_lvl -= 1
+                print("MOINS 1")
+            clock.tick(30)
+            pygame.display.flip()
+            if points_lvl <= 0:
+                done_lvl = True
+
+
+
+
+
+
     lvl_text = Gold_font.render("Niveau : " + str(Perso_Hero.a_lvl), True, [255, 0, 0])
     screen.blit(lvl_text, (0, 21))
     exp_text = Gold_font.render("Expérience : " + str(Perso_Hero.a_exp), True, [255, 0, 0])
     screen.blit(exp_text, (0, 42))
-    expn_text = Gold_font.render("Expérience requise avant prochaine niveau : " + str(Perso_Hero.a_exp_lvl_need), True, [255, 0, 0])
+    expn_text = Gold_font.render("Prochain niveau à : " + str(Perso_Hero.a_exp_lvl_need) + " points d'éxpérience", True, [255, 0, 0])
     screen.blit(expn_text, (0, 63))
     Health_text = Gold_font.render("Health : " + str(Perso_Hero.a_health), True, [255, 0, 0])
     screen.blit(Health_text, (0, 0))

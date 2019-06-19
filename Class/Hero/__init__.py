@@ -40,7 +40,7 @@ class Hero(Class.Perso.Perso):
     a_armor = None
     a_inventory = {}
 
-    aAttaque_Speed = 60
+    aAttaque_Speed = 6
     a_Duree = 0
 
     def __init__(self, px, py):
@@ -79,5 +79,8 @@ class Hero(Class.Perso.Perso):
     def actulvl(self):
         if self.a_exp >= self.a_exp_lvl_need:
             self.a_lvl += 1
-            self.a_exp = 0
+            self.a_exp = self.a_exp - self.a_exp_lvl_need
             self.a_exp_lvl_need *= 1.5
+            return True
+        else:
+            return False
