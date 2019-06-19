@@ -169,6 +169,30 @@ def equipe(p_hero, p_item):
         p_hero.a_armor = p_item
     Perso_Hero.actustat()
 
+# Fonction pour verifier la hitbox
+def inRects(perso):
+    x,y = perso.aX , perso.aY
+    height,width = perso.aImage.get_height() , perso.aImage.get_width()
+    for onecailloux in Hitbox_Glace:
+        pixel1 = x + width , y
+        pixel2 = x + width , y + height
+        if onecailloux.inRect(pixel1) or onecailloux.inRect(pixel2):
+            return "right"
+        pixel1 = x , y + height
+        pixel2 = x + width , y + height
+        if onecailloux.inRect(pixel1) or onecailloux.inRect(pixel2) :
+            return "down"
+        pixel1 = x , y
+        pixel2 = x , y + height
+        if onecailloux.inRect(pixel1) or onecailloux.inRect(pixel2) :
+            return"left"
+        pixel1 = x , y
+        pixel2 = x + width , y
+        if onecailloux.inRect(pixel1) or onecailloux.inRect(pixel2) :
+            return "top"
+    return "none"
+
+
 
 ###################################################################################
 # Initialize pygame
@@ -205,8 +229,8 @@ while not done:
 
     # Deplacement du Hero si il n'est pas entrain de faire une autre action
     if Perso_Hero.a_Duree == 0:
-
-        if KeysPressed[pygame.K_UP]:
+        collision = inRects(Perso_Hero)
+        if KeysPressed[pygame.K_UP] and collision != "top" :
             Perso_Hero.changei("HeroH")
             if Perso_Hero.aY > screenHeight / 2 - 25:
                 Perso_Hero.aY -= Perso_Hero.vitesse
@@ -218,7 +242,7 @@ while not done:
                     CurrentMap.a_YDecor = 0
                     Perso_Hero.aY -= Perso_Hero.vitesse
 
-        if KeysPressed[pygame.K_DOWN]:
+        if KeysPressed[pygame.K_DOWN] and collision != "down" :
             Perso_Hero.changei("Hero")
             if Perso_Hero.aY < screenHeight / 2 - 25:
                 Perso_Hero.aY += Perso_Hero.vitesse
@@ -230,7 +254,7 @@ while not done:
                     CurrentMap.a_YDecor = Fond.get_height() - screenHeight
                     Perso_Hero.aY += Perso_Hero.vitesse
 
-        if KeysPressed[pygame.K_LEFT]:
+        if KeysPressed[pygame.K_LEFT] and collision != "left":
             Perso_Hero.changei("HeroG")
             if Perso_Hero.aX > screenWidth / 2 - 25:
                 Perso_Hero.aX -= Perso_Hero.vitesse
@@ -242,7 +266,7 @@ while not done:
                     CurrentMap.a_XDecor = 0
                     Perso_Hero.aX -= Perso_Hero.vitesse
 
-        if KeysPressed[pygame.K_RIGHT]:
+        if KeysPressed[pygame.K_RIGHT] and collision != "right":
             Perso_Hero.changei("HeroD")
             if Perso_Hero.aX < screenWidth / 2 - 25:
                 Perso_Hero.aX += Perso_Hero.vitesse
@@ -266,7 +290,7 @@ while not done:
         Perso_Hero.aX = screenWidth - Perso_Hero.aImage.get_width()
     if Perso_Hero.aY + Perso_Hero.aImage.get_height() > screenHeight:
         Perso_Hero.aY = screenHeight - Perso_Hero.aImage.get_height()
-    hero_hitbox = (Perso_Hero.aX + 5, Perso_Hero.aY, 50, 60)
+    hero_hitbox = (Perso_Hero.aX , Perso_Hero.aY, Perso_Hero.aImage.get_height(), Perso_Hero.aImage.get_width())
 
     for onecailloux in CurrentMap.a_Tab_Hitbox:
         onecailloux.affiche_aX = onecailloux.aX - CurrentMap.a_XDecor
