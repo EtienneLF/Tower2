@@ -1,7 +1,9 @@
-import Class.Perso
-import pygame
 import inspect
 from os import path
+
+import pygame
+
+import Class.Perso
 
 # recherche du répertoire de travail
 scriptPATH = path.abspath(inspect.getsourcefile(lambda: 0))  # compatible interactive Python Shell
@@ -14,6 +16,7 @@ assets = path.join(scriptDIR, "data\Hero_mouvement")
 class Hero(Class.Perso.Perso):
     # Declaration des stats
     a_health = 100
+    a_max_health = 100
     a_mana = 100
     a_speed = 60  # Attaque Speed : temps d'attente avant de pouvoir faire un mouvement
     a_strength_base = 25
@@ -40,7 +43,7 @@ class Hero(Class.Perso.Perso):
     a_armor = None
     a_inventory = {}
 
-    aAttaque_Speed = 60
+    aAttaque_Speed = 6
     a_Duree = 0
 
     def __init__(self, px, py):
@@ -79,5 +82,8 @@ class Hero(Class.Perso.Perso):
     def actulvl(self):
         if self.a_exp >= self.a_exp_lvl_need:
             self.a_lvl += 1
-            self.a_exp = 0
-            self.a_exp_lvl_need *= 1.5
+            self.a_exp = self.a_exp - self.a_exp_lvl_need
+            self.a_exp_lvl_need = int(self.a_exp_lvl_need * 1.5)
+            return True
+        else:
+            return False

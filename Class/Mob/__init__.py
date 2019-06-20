@@ -1,5 +1,6 @@
-import Class.Perso
 import random
+
+import Class.Perso
 
 
 class Mob(Class.Perso.Perso):
