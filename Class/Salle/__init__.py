@@ -1,7 +1,8 @@
-import pygame
 import inspect
 import os
 from os import path
+
+import pygame
 
 # recherche du répertoire de travail
 scriptPATH = path.abspath(inspect.getsourcefile(lambda: 0))  # compatible interactive Python Shell
