@@ -42,7 +42,7 @@ class Hero(Class.Perso.Perso):
     a_boot = None
     a_armor = None
     a_inventory = {}
-
+    a_etat = "marche"
     aAttaque_Speed = 6
     a_Duree = 0
 
