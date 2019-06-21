@@ -176,6 +176,21 @@ Bouton_vitesse = Button_lvl(Bouton_image, 50, 520)
 
 Bouton_lvl = [Bouton_health, Bouton_mana, Bouton_strength, Bouton_def, Bouton_int, Bouton_vitesse]
 
+#Fonction pour verifier la glissade
+
+def isSliding(perso):
+    x = perso.aX + CurrentMap.a_XDecor
+    y = perso.aY + CurrentMap.a_YDecor
+    if CurrentMap != Map_Glace:
+        print("false")
+        return False
+    if (345 < x < 649 and 0 <= y < 231 ) or (294 < x < 716 and 640 < y < 760):
+        print("false")
+        return False
+    else:
+        print("true")
+        return True
+
 # Fonction pour verifier la hitbox
 
 
@@ -276,13 +291,88 @@ while not done:
     KeysPressed = pygame.key.get_pressed()
 
     # Déplacement du Hero si il n'est pas entrain de faire une autre action
+
     if Perso_Hero.a_Duree == 0:
         collision = inRects(Perso_Hero)
         collision_vitesse = inRectsVitesse(Perso_Hero)
-        if KeysPressed[pygame.K_UP] and collision[3] is False:
-            Perso_Hero.changei("HeroH")
+        # if ne glisse pas, alors on gère toutes les directions
+        if Perso_Hero.a_etat == "marche" :
+            if KeysPressed[pygame.K_UP] and collision[3] is False:
+                Perso_Hero.changei("HeroH")
+                if isSliding(Perso_Hero) is True and CurrentMap == Map_Glace :
+                    Perso_Hero.a_etat = "slide_up"
+                if collision_vitesse[3] is not False:
+                    Perso_Hero.aY = collision_vitesse[3] - CurrentMap.a_YDecor + 1
+                else:
+                    if Perso_Hero.aY > screenHeight / 2 - 25:
+                        Perso_Hero.aY -= Perso_Hero.vitesse
+                        if Perso_Hero.aY < screenHeight / 2 - 25:
+                            Perso_Hero.aY = screenHeight / 2 - 25
+                    else:
+                        CurrentMap.a_YDecor -= Perso_Hero.vitesse
+                        if CurrentMap.a_YDecor < 0:
+                            CurrentMap.a_YDecor = 0
+                            Perso_Hero.aY -= Perso_Hero.vitesse
+
+
+            if KeysPressed[pygame.K_DOWN] and collision[1] is False:
+                Perso_Hero.changei("Hero")
+                if isSliding(Perso_Hero) is True and CurrentMap == Map_Glace :
+                    Perso_Hero.a_etat = "slide_down"
+                if collision_vitesse[1] is not False:
+                    Perso_Hero.aY = collision_vitesse[1] - Perso_Hero.aImage.get_height() - CurrentMap.a_YDecor - 1
+                else:
+                    if Perso_Hero.aY < screenHeight / 2 - 25:
+                        Perso_Hero.aY += Perso_Hero.vitesse
+                        if Perso_Hero.aY > screenHeight / 2 - 25:
+                            Perso_Hero.aY = screenHeight / 2 - 25
+                    else:
+                        CurrentMap.a_YDecor += Perso_Hero.vitesse
+                        if CurrentMap.a_YDecor + screenHeight > Fond.get_height():
+                            CurrentMap.a_YDecor = Fond.get_height() - screenHeight
+                            Perso_Hero.aY += Perso_Hero.vitesse
+
+            if KeysPressed[pygame.K_LEFT] and collision[2] is False:
+                Perso_Hero.changei("HeroG")
+                if isSliding(Perso_Hero) is True and CurrentMap == Map_Glace :
+                    Perso_Hero.a_etat = "slide_left"
+                if collision_vitesse[2] is not False:
+                    Perso_Hero.aX = collision_vitesse[2] - CurrentMap.a_XDecor + 1
+                else:
+                    if Perso_Hero.aX > screenWidth / 2 - 25:
+                        Perso_Hero.aX -= Perso_Hero.vitesse
+                        if Perso_Hero.aX < screenWidth / 2 - 25:
+                            Perso_Hero.aX = screenWidth / 2 - 25
+                    else:
+                        CurrentMap.a_XDecor -= Perso_Hero.vitesse
+                        if CurrentMap.a_XDecor < 0:
+                            CurrentMap.a_XDecor = 0
+                            Perso_Hero.aX -= Perso_Hero.vitesse
+
+            if KeysPressed[pygame.K_RIGHT] and collision[0] is False:
+                Perso_Hero.changei("HeroD")
+                if isSliding(Perso_Hero) is True and CurrentMap == Map_Glace:
+                    Perso_Hero.a_etat = "slide_right"
+                if collision_vitesse[0] is not False:
+                    Perso_Hero.aX = collision_vitesse[0] - Perso_Hero.aImage.get_width() - CurrentMap.a_XDecor - 1
+                else:
+                    if Perso_Hero.aX < screenWidth / 2 - 25:
+                        Perso_Hero.aX += Perso_Hero.vitesse
+                        if Perso_Hero.aX > screenWidth / 2 - 25:
+                            Perso_Hero.aX = screenWidth / 2 - 25
+                    else:
+                        CurrentMap.a_XDecor += Perso_Hero.vitesse
+                        if CurrentMap.a_XDecor + screenWidth > Fond.get_width():
+                            CurrentMap.a_XDecor = Fond.get_width() - screenWidth
+                            Perso_Hero.aX += Perso_Hero.vitesse
+
+
+        elif Perso_Hero.a_etat == "slide_up" :
             if collision_vitesse[3] is not False:
                 Perso_Hero.aY = collision_vitesse[3] - CurrentMap.a_YDecor + 1
+                Perso_Hero.a_etat = "marche"
+            elif not isSliding(Perso_Hero):
+                Perso_Hero.a_etat = "marche"
             else:
                 if Perso_Hero.aY > screenHeight / 2 - 25:
                     Perso_Hero.aY -= Perso_Hero.vitesse
@@ -294,10 +384,12 @@ while not done:
                         CurrentMap.a_YDecor = 0
                         Perso_Hero.aY -= Perso_Hero.vitesse
 
-        if KeysPressed[pygame.K_DOWN] and collision[1] is False:
-            Perso_Hero.changei("Hero")
+        elif Perso_Hero.a_etat == "slide_down" :
             if collision_vitesse[1] is not False:
                 Perso_Hero.aY = collision_vitesse[1] - Perso_Hero.aImage.get_height() - CurrentMap.a_YDecor - 1
+                Perso_Hero.a_etat = "marche"
+            elif not isSliding(Perso_Hero):
+                Perso_Hero.a_etat = "marche"
             else:
                 if Perso_Hero.aY < screenHeight / 2 - 25:
                     Perso_Hero.aY += Perso_Hero.vitesse
@@ -309,10 +401,13 @@ while not done:
                         CurrentMap.a_YDecor = Fond.get_height() - screenHeight
                         Perso_Hero.aY += Perso_Hero.vitesse
 
-        if KeysPressed[pygame.K_LEFT] and collision[2] is False:
-            Perso_Hero.changei("HeroG")
+
+        elif Perso_Hero.a_etat == "slide_left":
             if collision_vitesse[2] is not False:
                 Perso_Hero.aX = collision_vitesse[2] - CurrentMap.a_XDecor + 1
+                Perso_Hero.a_etat = "marche"
+            elif not isSliding(Perso_Hero):
+                Perso_Hero.a_etat = "marche"
             else:
                 if Perso_Hero.aX > screenWidth / 2 - 25:
                     Perso_Hero.aX -= Perso_Hero.vitesse
@@ -324,10 +419,12 @@ while not done:
                         CurrentMap.a_XDecor = 0
                         Perso_Hero.aX -= Perso_Hero.vitesse
 
-        if KeysPressed[pygame.K_RIGHT] and collision[0] is False:
-            Perso_Hero.changei("HeroD")
+        elif Perso_Hero.a_etat == "slide_right":
             if collision_vitesse[0] is not False:
                 Perso_Hero.aX = collision_vitesse[0] - Perso_Hero.aImage.get_width() - CurrentMap.a_XDecor - 1
+                Perso_Hero.a_etat = "marche"
+            elif not isSliding(Perso_Hero):
+                Perso_Hero.a_etat = "marche"
             else:
                 if Perso_Hero.aX < screenWidth / 2 - 25:
                     Perso_Hero.aX += Perso_Hero.vitesse
@@ -339,24 +436,35 @@ while not done:
                         CurrentMap.a_XDecor = Fond.get_width() - screenWidth
                         Perso_Hero.aX += Perso_Hero.vitesse
 
+        else:
+            print("wtf dude")
+
+        # Sinon, alors on bouge dans la direction retenue pendant la glissade
+        # On check les collisions
+        # Si collision, on arrête l'état glissade
+
     else:
         Perso_Hero.a_Duree -= 1
 
 # Pour éviter que le Perso sorte de l'écran
     if Perso_Hero.aX < 0:
         Perso_Hero.aX = 0
+        Perso_Hero.a_etat = "marche"
     if Perso_Hero.aY < 0:
         Perso_Hero.aY = 0
+        Perso_Hero.a_etat = "marche"
     if Perso_Hero.aX + Perso_Hero.aImage.get_width() > screenWidth:
         Perso_Hero.aX = screenWidth - Perso_Hero.aImage.get_width()
+        Perso_Hero.a_etat = "marche"
     if Perso_Hero.aY + Perso_Hero.aImage.get_height() > screenHeight:
         Perso_Hero.aY = screenHeight - Perso_Hero.aImage.get_height()
+        Perso_Hero.a_etat = "marche"
     hero_hitbox = (Perso_Hero.aX, Perso_Hero.aY, Perso_Hero.aImage.get_height(), Perso_Hero.aImage.get_width())
 
     for onecailloux in CurrentMap.a_Tab_Hitbox:
         onecailloux.affiche_aX = onecailloux.aX - CurrentMap.a_XDecor
         onecailloux.affiche_aY = onecailloux.aY - CurrentMap.a_YDecor
-        pygame.draw.rect(screen, (255, 0, 0), (onecailloux.affiche_aX, onecailloux.affiche_aY, 50, 60), 2)
+
 
     for one_marchant in CurrentMap.a_Marchand_Liste:
         QuelMarchand = Perso_Hero.ismarchand(one_marchant, CurrentMap .a_XDecor, CurrentMap.a_YDecor)
@@ -439,9 +547,6 @@ while not done:
 
 # Affiche le perso
     screen.blit(Perso_Hero.aImage, (Perso_Hero.aX, Perso_Hero.aY))
-    pygame.draw.rect(screen, (255, 0, 0), hero_hitbox, 2)
-    pygame.draw.rect(screen, (255, 0, 255), (Perso_Hero.aX - Perso_Hero.vitesse, Perso_Hero.aY - Perso_Hero.vitesse, Perso_Hero.aImage.get_height() + 2*Perso_Hero.vitesse, Perso_Hero.aImage.get_width() + 2*Perso_Hero.vitesse), 2)
-
 # Affichage de chaque pnj / Mob et Sortie de la pièce courante
     for one_Pnj in CurrentMap.a_Pnj_List:
         screen.blit(one_Pnj.aImage, (one_Pnj.aX - CurrentMap.a_XDecor, one_Pnj.aY - CurrentMap.a_YDecor))
