@@ -1,4 +1,5 @@
 import inspect
+import time
 import os
 import pygame
 from Class.Button import Button_lvl
@@ -6,7 +7,7 @@ from Class.Cailloux import Cailloux
 from Class.Hero import Hero
 from Class.Item import Epee, Bottes, Armure
 from Class.Mob import Mob
-from Class.Perso import Pnj, MarchandArme, MarchandMagie
+from Class.Perso import Pnj, MarchandArme, MarchandMagie, PnjMouv
 from Class.Salle import Salle, ChangeSalle
 from Class.Shop import Shop
 
@@ -16,10 +17,17 @@ scriptPATH = os.path.abspath(inspect.getsourcefile(lambda: 0))  # compatible int
 scriptDIR = os.path.dirname(scriptPATH)
 assets = os.path.join(scriptDIR, "data")
 
+# Image du title screen
+Title_Screen = pygame.image.load(os.path.join(assets, "TitleScreenV1.png"))
+
+Selection_Screen = pygame.image.load(os.path.join(assets, "Selection de sexe.png"))
+
+Couleur_Screen = pygame.image.load(os.path.join(assets, "Selection Couleur.png"))
+
 # Charge les images des différentes map
 Map_Base_Image = pygame.image.load(os.path.join(assets, "Carte.jpg"))
 Map_Glace_Image = pygame.image.load(os.path.join(assets, "Glace.PNG"))
-Map_Lave_Image = pygame.image.load(os.path.join(assets, "Lave.PNG"))
+# Map_Lave_Image = pygame.image.load(os.path.join(assets, "Lave.PNG"))
 
 # Création équipement
 Excalibur = Epee("Excalibur", 1, 10, "C'est soit disant la meilleur épée du royaume")
@@ -45,7 +53,7 @@ Marchand_Magie = MarchandMagie(800, 1000, "Marchand_Magie.png", Shop_Magie_Base)
 Marchand_Magie.aImage = pygame.transform.scale(Marchand_Magie.aImage, (100, 160))
 # Création salle de base
 # Pnj
-Megumin = Pnj(1125, 450, "Megumin.png", "Bonjour EXPLOSION", "Megumin")
+Megumin = PnjMouv(1125, 450, "Megumin.png", "Bonjour EXPLOSION", "Megumin")
 Megumin.aImage = pygame.transform.scale(Megumin.aImage, (100, 160))
 
 # Mob
@@ -91,9 +99,9 @@ Glace_Cailloux29 = Cailloux(299, 1)
 Glace_Cailloux30 = Cailloux(361, 56)
 Glace_Cailloux31 = Cailloux(652, 1)
 Glace_Cailloux32 = Cailloux(593, 56)
-Glace_Cailloux33 = Cailloux(241, 585)
+Glace_Cailloux33 = Cailloux(241, 588)
 Glace_Cailloux34 = Cailloux(241, 635)
-Glace_Cailloux35 = Cailloux(705, 585)
+Glace_Cailloux35 = Cailloux(705, 588)
 Glace_Cailloux36 = Cailloux(705, 635)
 Glace_Cailloux37 = Cailloux(180, 646)
 Glace_Cailloux38 = Cailloux(180, 704)
@@ -125,7 +133,7 @@ Mob_List_Glace = [Mob_3]
 
 Item_List_Glace = []
 
-Hitbox_Glace = [Glace_Cailloux1, Glace_Cailloux2, Glace_Cailloux3, Glace_Cailloux4, Glace_Cailloux5, Glace_Cailloux6, Glace_Cailloux7, Glace_Cailloux8, Glace_Cailloux9, Glace_Cailloux10, Glace_Cailloux11, Glace_Cailloux12, Glace_Cailloux13, Glace_Cailloux14, Glace_Cailloux15, Glace_Cailloux16, Glace_Cailloux17, Glace_Cailloux18, Glace_Cailloux19, Glace_Cailloux20, Glace_Cailloux21, Glace_Cailloux22, Glace_Cailloux23, Glace_Cailloux24, Glace_Cailloux25, Glace_Cailloux26, Glace_Cailloux27, Glace_Cailloux28, Glace_Cailloux29, Glace_Cailloux30, Glace_Cailloux31, Glace_Cailloux32, Glace_Cailloux33, Glace_Cailloux34, Glace_Cailloux35, Glace_Cailloux36, Glace_Cailloux37, Glace_Cailloux38, Glace_Cailloux39, Glace_Cailloux40]
+Hitbox_Glace = [Glace_Cailloux2, Glace_Cailloux3, Glace_Cailloux4, Glace_Cailloux5, Glace_Cailloux6, Glace_Cailloux7, Glace_Cailloux8, Glace_Cailloux9, Glace_Cailloux10, Glace_Cailloux11, Glace_Cailloux12, Glace_Cailloux13, Glace_Cailloux14, Glace_Cailloux15, Glace_Cailloux16, Glace_Cailloux17, Glace_Cailloux18, Glace_Cailloux19, Glace_Cailloux20, Glace_Cailloux21, Glace_Cailloux22, Glace_Cailloux23, Glace_Cailloux24, Glace_Cailloux25, Glace_Cailloux26, Glace_Cailloux27, Glace_Cailloux28, Glace_Cailloux29, Glace_Cailloux30, Glace_Cailloux31, Glace_Cailloux32, Glace_Cailloux33, Glace_Cailloux34, Glace_Cailloux35, Glace_Cailloux36, Glace_Cailloux37, Glace_Cailloux38, Glace_Cailloux39, Glace_Cailloux40]
 
 J_x_decor_Glace = 0
 J_y_decor_Glace = 0
@@ -175,6 +183,19 @@ Bouton_int = Button_lvl(Bouton_image, 50, 420)
 Bouton_vitesse = Button_lvl(Bouton_image, 50, 520)
 
 Bouton_lvl = [Bouton_health, Bouton_mana, Bouton_strength, Bouton_def, Bouton_int, Bouton_vitesse]
+
+# Déclaration des etats :
+Bas = 00
+Gauche = 1
+Haut = 2
+Droite = 3
+
+Attaque = 5
+Idle = 6
+Marche = 7
+
+Homme = 10
+Femme = 20
 
 # Fonction pour verifier la hitbox
 
@@ -251,21 +272,82 @@ text_font = pygame.font.SysFont("arial", 50)
 Gold_font = pygame.font.SysFont("arial", 20)
 
 # Set the width and height of the screen [width,height]
-screen = pygame.display.set_mode((screenWidth, screenHeight))
+screen = pygame.display.set_mode((800, 400))
+# screen = pygame.display.set_mode((screenWidth, screenHeight))
 
 # Set title of screen
 pygame.display.set_caption("Oui")
 
 # Loop until the user clicks the close button.
 done = False
+done2 = False
+done3 = False
+done4 = False
 
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 
 pygame.mouse.set_visible(1)
 
+
 # Programme principal
 while not done:
+
+    while not done2:
+        for event in pygame.event.get():  # User did something
+
+            if event.type == pygame.QUIT:  # If user clicked close
+                done = True  # Flag that we are done so we exit this loop
+                done2 = True
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            done2 = True
+            time.sleep(0.3)
+        screen.blit(Title_Screen, (0, 0))
+
+        pygame.display.flip()
+
+    while not done3:
+        for event in pygame.event.get():  # User did something
+
+            if event.type == pygame.QUIT:  # If user clicked close
+                done = True  # Flag that we are done so we exit this loop
+                done3 = True
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            pos = pygame.mouse.get_pos()
+            x = pos[0]
+            if x<400:
+                Perso_Hero.a_genre = Homme
+            done3 = True
+            time.sleep(0.3)
+        screen.blit(Selection_Screen, (0, 0))
+
+        pygame.display.flip()
+
+    while not done4:
+        for event in pygame.event.get():  # User did something
+
+            if event.type == pygame.QUIT:  # If user clicked close
+                done = True  # Flag that we are done so we exit this loop
+                done4 = True
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            pos = pygame.mouse.get_pos()
+            x = pos[0]
+            if 0 <= x < 266:
+                Perso_Hero.a_color = 0
+            elif 266 <= x < 532:
+                Perso_Hero.a_color = 1
+            elif 532 <= x:
+                Perso_Hero.a_color = 2
+            done4 = True
+            Perso_Hero.updatesprite()
+            screen = pygame.display.set_mode((screenWidth, screenHeight))
+        screen.blit(Couleur_Screen, (0, 0))
+
+        pygame.display.flip()
+
     event = pygame.event.Event(pygame.USEREVENT)
 
     for event in pygame.event.get():  # User did something
@@ -275,12 +357,20 @@ while not done:
 
     KeysPressed = pygame.key.get_pressed()
 
+    #if not KeysPressed[pygame.K_UP] and not KeysPressed[pygame.K_DOWN] and not KeysPressed[pygame.K_RIGHT] and not KeysPressed[pygame.K_LEFT]:
+     #   print("aucun")
+
+    time = int(pygame.time.get_ticks() / 100)
+
     # Déplacement du Hero si il n'est pas entrain de faire une autre action
     if Perso_Hero.a_Duree == 0:
+        if not KeysPressed[pygame.K_UP] and not KeysPressed[pygame.K_DOWN] and not KeysPressed[pygame.K_RIGHT] and not KeysPressed[pygame.K_LEFT]:
+            Perso_Hero.a_etat = Idle
         collision = inRects(Perso_Hero)
         collision_vitesse = inRectsVitesse(Perso_Hero)
         if KeysPressed[pygame.K_UP] and collision[3] is False:
-            Perso_Hero.changei("HeroH")
+            Perso_Hero.a_etat = Marche
+            Perso_Hero.a_dir = Haut
             if collision_vitesse[3] is not False:
                 Perso_Hero.aY = collision_vitesse[3] - CurrentMap.a_YDecor + 1
             else:
@@ -295,9 +385,10 @@ while not done:
                         Perso_Hero.aY -= Perso_Hero.vitesse
 
         if KeysPressed[pygame.K_DOWN] and collision[1] is False:
-            Perso_Hero.changei("Hero")
+            Perso_Hero.a_etat = Marche
+            Perso_Hero.a_dir = Bas
             if collision_vitesse[1] is not False:
-                Perso_Hero.aY = collision_vitesse[1] - Perso_Hero.aImage.get_height() - CurrentMap.a_YDecor - 1
+                Perso_Hero.aY = collision_vitesse[1] - 33 - CurrentMap.a_YDecor - 1
             else:
                 if Perso_Hero.aY < screenHeight / 2 - 25:
                     Perso_Hero.aY += Perso_Hero.vitesse
@@ -310,7 +401,8 @@ while not done:
                         Perso_Hero.aY += Perso_Hero.vitesse
 
         if KeysPressed[pygame.K_LEFT] and collision[2] is False:
-            Perso_Hero.changei("HeroG")
+            Perso_Hero.a_etat = Marche
+            Perso_Hero.a_dir = Gauche
             if collision_vitesse[2] is not False:
                 Perso_Hero.aX = collision_vitesse[2] - CurrentMap.a_XDecor + 1
             else:
@@ -325,9 +417,10 @@ while not done:
                         Perso_Hero.aX -= Perso_Hero.vitesse
 
         if KeysPressed[pygame.K_RIGHT] and collision[0] is False:
-            Perso_Hero.changei("HeroD")
+            Perso_Hero.a_etat = Marche
+            Perso_Hero.a_dir = Droite
             if collision_vitesse[0] is not False:
-                Perso_Hero.aX = collision_vitesse[0] - Perso_Hero.aImage.get_width() - CurrentMap.a_XDecor - 1
+                Perso_Hero.aX = collision_vitesse[0] - 35 - CurrentMap.a_XDecor - 1
             else:
                 if Perso_Hero.aX < screenWidth / 2 - 25:
                     Perso_Hero.aX += Perso_Hero.vitesse
@@ -347,11 +440,11 @@ while not done:
         Perso_Hero.aX = 0
     if Perso_Hero.aY < 0:
         Perso_Hero.aY = 0
-    if Perso_Hero.aX + Perso_Hero.aImage.get_width() > screenWidth:
-        Perso_Hero.aX = screenWidth - Perso_Hero.aImage.get_width()
-    if Perso_Hero.aY + Perso_Hero.aImage.get_height() > screenHeight:
-        Perso_Hero.aY = screenHeight - Perso_Hero.aImage.get_height()
-    hero_hitbox = (Perso_Hero.aX, Perso_Hero.aY, Perso_Hero.aImage.get_height(), Perso_Hero.aImage.get_width())
+    if Perso_Hero.aX + 35 > screenWidth:
+        Perso_Hero.aX = screenWidth - 35
+    if Perso_Hero.aY + 33 > screenHeight:
+        Perso_Hero.aY = screenHeight - 33
+    hero_hitbox = (Perso_Hero.aX, Perso_Hero.aY, 33, 35)
 
     for onecailloux in CurrentMap.a_Tab_Hitbox:
         onecailloux.affiche_aX = onecailloux.aX - CurrentMap.a_XDecor
@@ -425,7 +518,7 @@ while not done:
 
 # Test si le perso est proche de la sortie, si oui le change de salle
     for one_Sortie in CurrentMap.a_Sortie_Liste:
-        if Perso_Hero.aX + Perso_Hero.aImage.get_width() > one_Sortie.aX - CurrentMap.a_XDecor and Perso_Hero.aX < one_Sortie.aX + one_Sortie.a_Image.get_width() - CurrentMap.a_XDecor and Perso_Hero.aY + Perso_Hero.aImage.get_height() > one_Sortie.aY - CurrentMap.a_YDecor and Perso_Hero.aY < one_Sortie.aY + one_Sortie.a_Image.get_height() - CurrentMap.a_YDecor:
+        if Perso_Hero.aX + 35 > one_Sortie.aX - CurrentMap.a_XDecor and Perso_Hero.aX < one_Sortie.aX + one_Sortie.a_Image.get_width() - CurrentMap.a_XDecor and Perso_Hero.aY + 33 > one_Sortie.aY - CurrentMap.a_YDecor and Perso_Hero.aY < one_Sortie.aY + one_Sortie.a_Image.get_height() - CurrentMap.a_YDecor:
             CurrentMap = one_Sortie.a_Salle
             Fond = CurrentMap.a_Image
             CurrentMap.a_XDecor = one_Sortie.aX_Decor
@@ -438,13 +531,14 @@ while not done:
     screen.blit(Fond, (0, 0), area=ZoneCam)
 
 # Affiche le perso
-    screen.blit(Perso_Hero.aImage, (Perso_Hero.aX, Perso_Hero.aY))
+    screen.blit(Perso_Hero.quelimage(time), (Perso_Hero.aX, Perso_Hero.aY))
+
     pygame.draw.rect(screen, (255, 0, 0), hero_hitbox, 2)
-    pygame.draw.rect(screen, (255, 0, 255), (Perso_Hero.aX - Perso_Hero.vitesse, Perso_Hero.aY - Perso_Hero.vitesse, Perso_Hero.aImage.get_height() + 2*Perso_Hero.vitesse, Perso_Hero.aImage.get_width() + 2*Perso_Hero.vitesse), 2)
+    pygame.draw.rect(screen, (255, 0, 255), (Perso_Hero.aX - Perso_Hero.vitesse, Perso_Hero.aY - Perso_Hero.vitesse, 33 + 2*Perso_Hero.vitesse, 35 + 2*Perso_Hero.vitesse), 2)
 
 # Affichage de chaque pnj / Mob et Sortie de la pièce courante
     for one_Pnj in CurrentMap.a_Pnj_List:
-        screen.blit(one_Pnj.aImage, (one_Pnj.aX - CurrentMap.a_XDecor, one_Pnj.aY - CurrentMap.a_YDecor))
+        screen.blit(one_Pnj.mouv(time), (one_Pnj.aX - CurrentMap.a_XDecor, one_Pnj.aY - CurrentMap.a_YDecor))
 
     for one_Mob in CurrentMap.a_Mob_List:
         if one_Mob.a_health > 0:
