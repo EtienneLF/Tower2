@@ -1,12 +1,12 @@
 import inspect
-import time
+import time as temps
 import os
 import pygame
 from Class.Button import Button_lvl
 from Class.Cailloux import Cailloux
 from Class.Hero import Hero
 from Class.Item import Epee, Bottes, Armure
-from Class.Mob import Mob
+from Class.Mob import Mob, Boss
 from Class.Perso import Pnj, MarchandArme, MarchandMagie, PnjMouv
 from Class.Salle import Salle, ChangeSalle
 from Class.Shop import Shop
@@ -68,19 +68,20 @@ Marchand_Arme = MarchandArme(341, 218, "Marchand_Arme.png", Shop_Arme_Base)
 
 Marchand_Magie = MarchandMagie(490, 335, "Marchand_Magie.png", Shop_Magie_Base)
 
-
 # Pnj
 Megumin = PnjMouv(620, 545, "Megumin.png", "Bonjour", "Habitant")
 
 # Mob
-Mob_1 = Mob(500, 500, 100, "Megumin.png", 5, 100, 10, 5)
-Mob_1.aImage = pygame.transform.scale(Megumin.aImage, (100, 160))
+Mob_1 = Mob(90, 790, 100, "Megumin.png", 2, 100, 10, 5)
+Mob_2 = Mob(275, 55, 100, "Megumin.png", 2, 100, 10, 5)
+Mob_3 = Mob(900, 900, 100, "Megumin.png", 2, 100, 10, 5)
+Mob_4 = Mob(553, 813, 100, "Megumin.png", 2, 100, 10, 5)
+Mob_5 = Mob(790, 790, 100, "Megumin.png", 2, 100, 10, 5)
+Mob_6 = Mob(830, 400, 100, "Megumin.png", 2, 100, 10, 5)
+Mob_7 = Mob(210, 890, 100, "Megumin.png", 2, 100, 10, 5)
+Mob_8 = Mob(441, 161, 100, "Megumin.png", 2, 100, 10, 5)
 
-Mob_2 = Mob(600, 500, 100, "Megumin.png", 5, 100, 10, 5)
-Mob_2.aImage = pygame.transform.scale(Megumin.aImage, (100, 160))
-
-Mob_3 = Mob(100, 100, 100, "Megumin.png", 5, 100, 10, 5)
-Mob_3.aImage = pygame.transform.scale(Megumin.aImage, (100, 160))
+Boss_mob = Boss(400, 400, 300, "Megumin.png", 4, 300, 40, 30)
 
 # Création cailloux
 
@@ -366,6 +367,26 @@ Glace2_Cailloux6 = Cailloux(863,904)
 Glace2_Cailloux7 = Cailloux(94,819)
 Glace2_Cailloux8 = Cailloux(94,854)
 
+Boss_salle1 = Cailloux(257, 223)
+Boss_salle2 = Cailloux(269, 223)
+Boss_salle3 = Cailloux(257, 244)
+Boss_salle4 = Cailloux(269, 244)
+
+Boss_salle5 = Cailloux(478, 223)
+Boss_salle6 = Cailloux(490, 223)
+Boss_salle7 = Cailloux(478, 244)
+Boss_salle8 = Cailloux(490, 244)
+
+Boss_salle9 = Cailloux(257, 415)
+Boss_salle10 = Cailloux(269, 415)
+Boss_salle11 = Cailloux(257, 436)
+Boss_salle12 = Cailloux(269, 436)
+
+Boss_salle13 = Cailloux(478, 415)
+Boss_salle14 = Cailloux(490, 415)
+Boss_salle15 = Cailloux(478, 436)
+Boss_salle16 = Cailloux(490, 436)
+
 # Position de la fenêtre
 J_x_decor_Base = 0
 J_y_decor_Base = 0
@@ -422,23 +443,24 @@ Shop2_Map = Salle(Pnj_List_Shop, Mob_List_Shop, Item_List_Shop, Shop2_Image, 0, 
 
 # Création Plaine et Glace 2
 
-Mob_Liste = []
+Mob_Liste1 = [Mob_5, Mob_6, Mob_7, Mob_8]
+Mob_Liste2 = [Mob_1, Mob_2, Mob_3, Mob_4]
 Plaine_Hitbox = []
 Glace_Hitbox = [Glace2_Cailloux1, Glace2_Cailloux2, Glace2_Cailloux3, Glace2_Cailloux4, Glace2_Cailloux4, Glace2_Cailloux5, Glace2_Cailloux6, Glace2_Cailloux7, Glace2_Cailloux8]
 Sortieoui = []
 Sortieoui2 = []
 MarchandList = []
 
-Glace2_Map = Salle(Pnj_List_Shop, Mob_Liste, Item_List_Shop, Glace2_Image, 450, 0, Glace_Hitbox, Sortieoui, MarchandList)
-Plaine_Map = Salle(Pnj_List_Shop, Mob_Liste, Item_List_Shop, Plaine_Image, 450, 0, Plaine_Hitbox, Sortieoui2, MarchandList)
+Glace2_Map = Salle(Pnj_List_Shop, Mob_Liste1, Item_List_Shop, Glace2_Image, 450, 0, Glace_Hitbox, Sortieoui, MarchandList)
+Plaine_Map = Salle(Pnj_List_Shop, Mob_Liste2, Item_List_Shop, Plaine_Image, 450, 0, Plaine_Hitbox, Sortieoui2, MarchandList)
 
 # Création Boss
 
-Mob_Liste_Boss = []
-Boss_Hitbox = []
+Mob_Liste_Boss = [Boss_mob]
+Boss_Hitbox = [Boss_salle1, Boss_salle2, Boss_salle3, Boss_salle4, Boss_salle5, Boss_salle6, Boss_salle7, Boss_salle8, Boss_salle9, Boss_salle10, Boss_salle11, Boss_salle12, Boss_salle13, Boss_salle14, Boss_salle15, Boss_salle16]
 Sortieoui3 = []
 MarchandList = []
-Map_Boss = Salle(Pnj_List_Shop, Mob_Liste, Item_List_Shop, Boss_Image, 450, 0, Boss_Hitbox, Sortieoui3, MarchandList)
+Map_Boss = Salle(Pnj_List_Shop, Mob_Liste_Boss, Item_List_Shop, Boss_Image, 450, 0, Boss_Hitbox, Sortieoui3, MarchandList)
 
 
 # Déclaration des sorties
@@ -600,13 +622,14 @@ pygame.init()
 # set police for text
 text_font = pygame.font.SysFont("arial", 50)
 Gold_font = pygame.font.SysFont("arial", 20)
+GG_Font = pygame.font.SysFont("arial", 50)
 
 # Set the width and height of the screen [width,height]
 screen = pygame.display.set_mode((800, 400))
 # screen = pygame.display.set_mode((screenWidth, screenHeight))
 
 # Set title of screen
-pygame.display.set_caption("Oui")
+pygame.display.set_caption("Elemental Quest")
 
 # Loop until the user clicks the close button.
 done = False
@@ -634,7 +657,7 @@ while not done:
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             done2 = True
-            time.sleep(0.3)
+            temps.sleep(0.3)
         screen.blit(Title_Screen, (0, 0))
 
         pygame.display.flip()
@@ -653,7 +676,7 @@ while not done:
             if x<400:
                 Perso_Hero.a_genre = Homme
             done3 = True
-            time.sleep(0.3)
+            temps.sleep(0.3)
         screen.blit(Selection_Screen, (0, 0))
 
         pygame.display.flip()
@@ -676,7 +699,7 @@ while not done:
                 Perso_Hero.a_color = 2
             done4 = True
             Perso_Hero.updatesprite()
-            time.sleep(0.3)
+            temps.sleep(0.3)
             screen = pygame.display.set_mode((screenWidth, screenHeight))
         screen.blit(Couleur_Screen, (0, 0))
 
@@ -958,8 +981,17 @@ while not done:
 # Affiche le perso
     screen.blit(Perso_Hero.quelimage(time), (Perso_Hero.aX, Perso_Hero.aY))
 
-    pygame.draw.rect(screen, (255, 0, 0), hero_hitbox, 2)
-    pygame.draw.rect(screen, (255, 0, 255), (Perso_Hero.aX - Perso_Hero.vitesse, Perso_Hero.aY - Perso_Hero.vitesse, 33 + 2*Perso_Hero.vitesse, 35 + 2*Perso_Hero.vitesse), 2)
+    # pygame.draw.rect(screen, (255, 0, 0), hero_hitbox, 2)
+    # pygame.draw.rect(screen, (255, 0, 255), (Perso_Hero.aX - Perso_Hero.vitesse, Perso_Hero.aY - Perso_Hero.vitesse, 33 + 2*Perso_Hero.vitesse, 35 + 2*Perso_Hero.vitesse), 2)
+
+    if Perso_Hero.a_health <= 0:
+        Perso_Hero.a_health = 100
+        CurrentMap = Map_Base
+        CurrentMap.a_XDecor = 250
+        CurrentMap.a_XDecor = 100
+        Perso_Hero.aX = 250
+        Perso_Hero.aY = 315
+        Fond = CurrentMap.a_Image
 
 # Affichage de chaque pnj / Mob et Sortie de la pièce courante
     for one_Pnj in CurrentMap.a_Pnj_List:
@@ -969,12 +1001,19 @@ while not done:
         if one_Mob.a_health > 0:
             one_Mob.move(Perso_Hero.aX + CurrentMap.a_XDecor, Perso_Hero.aY + CurrentMap.a_YDecor)
             one_Mob.attaque(Perso_Hero, CurrentMap.a_XDecor, CurrentMap.a_YDecor)
-            screen.blit(one_Mob.aImage, (one_Mob.aX - CurrentMap.a_XDecor, one_Mob.aY - CurrentMap.a_YDecor))
+            screen.blit(one_Mob.imagequel(time), (one_Mob.aX - CurrentMap.a_XDecor, one_Mob.aY - CurrentMap.a_YDecor))
         else:
             Perso_Hero.a_exp += one_Mob.xp
+            Perso_Hero.a_gold += one_Mob.gold
+            if one_Mob == Boss_mob:
+                GG_text = GG_Font.render("Bravo vous avez terminé ! ", True, [255, 0, 0])
+                screen.blit(GG_text, (50, 200))
+                pygame.display.flip()
+                temps.sleep(5)
+                pygame.quit()
             CurrentMap.a_Mob_List.remove(one_Mob)
-    for one_Sortie in CurrentMap.a_Sortie_Liste:
-        screen.blit(one_Sortie.a_Image, (one_Sortie.aX - CurrentMap.a_XDecor, one_Sortie.aY - CurrentMap.a_YDecor))
+    #for one_Sortie in CurrentMap.a_Sortie_Liste:
+       # screen.blit(one_Sortie.a_Image, (one_Sortie.aX - CurrentMap.a_XDecor, one_Sortie.aY - CurrentMap.a_YDecor))
     for one_marchant in CurrentMap.a_Marchand_Liste:
         screen.blit(one_marchant.image(time), (one_marchant.aX - CurrentMap.a_XDecor, one_marchant.aY - CurrentMap.a_YDecor))
         # Affichage du shop actuel
@@ -991,8 +1030,8 @@ while not done:
             pygame.draw.line(screen, [255, 255, 255], (10, 193 * 2), (589, 193 * 2))
             Marchand_Magie.aShop.dessine(screen)
 
-    for onecailloux in CurrentMap.a_Tab_Hitbox:
-        pygame.draw.rect(screen, (255, 0, 0), (onecailloux.affiche_aX, onecailloux.affiche_aY, 50, 60), 2)
+    #for onecailloux in CurrentMap.a_Tab_Hitbox:
+     #   pygame.draw.rect(screen, (255, 0, 0), (onecailloux.affiche_aX, onecailloux.affiche_aY, 50, 60), 2)
 
     if Perso_Hero.actulvl():
         done_lvl = False
@@ -1032,13 +1071,13 @@ while not done:
             screen.blit(text, (300, 5))
             text = Gold_font.render(" Augmente ta santé max de 10", True, [255, 255, 255])
             screen.blit(text, (110, 30))
-            text = Gold_font.render(" Augmente ton mana max de 10", True, [255, 255, 255])
+            text = Gold_font.render(" Augmente ton mana max de 10 (inutile) ", True, [255, 255, 255])
             screen.blit(text, (110, 130))
             text = Gold_font.render(" Augmente ta force de 5", True, [255, 255, 255])
             screen.blit(text, (110, 230))
             text = Gold_font.render("  Augmente ta defense de 5", True, [255, 255, 255])
             screen.blit(text, (110, 330))
-            text = Gold_font.render(" Augmente ton intelligence de 5", True, [255, 255, 255])
+            text = Gold_font.render(" Augmente ton intelligence de 5 (inutile)", True, [255, 255, 255])
             screen.blit(text, (110, 430))
             text = Gold_font.render(" Augmente ta vitesse de 1", True, [255, 255, 255])
             screen.blit(text, (110, 530))
@@ -1077,8 +1116,7 @@ while not done:
         zone_text = text_font.render(Perso_Hero.dialogue(one_Pnj, CurrentMap.a_XDecor, CurrentMap.a_YDecor), True, [255, 255, 0])
         screen.blit(zone_text, (0, 500))
 
-    if Perso_Hero.a_health <= 0:
-        done = True
+
     # 60 fps
     clock.tick(60)
     # Go ahead and update the screen with what we've drawn.

@@ -61,7 +61,7 @@ class Hero(Class.Perso.Perso):
     a_health = 100
     a_max_health = 100
     a_mana = 100
-    a_speed = 60  # Attaque Speed : temps d'attente avant de pouvoir faire un mouvement
+    a_speed = 120  # Attaque Speed : temps d'attente avant de pouvoir faire un mouvement
     a_strength_base = 25
     a_def_base = 1
     a_int_base = 1
@@ -75,7 +75,7 @@ class Hero(Class.Perso.Perso):
     a_def = 1
     a_int = 1
     a_res = 1
-    vitesse = 5
+    vitesse = 6
 
     a_exp = 0
     a_lvl = 1
@@ -134,7 +134,7 @@ class Hero(Class.Perso.Perso):
 
     def attaque(self):
         self.a_Etat = Attaque
-        print("ATTAQUE")
+        # print("ATTAQUE")
         self.a_Duree = self.aAttaque_Speed
 
     def actustat(self):
