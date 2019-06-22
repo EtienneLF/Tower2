@@ -213,7 +213,7 @@ ville_cite36 = Cailloux(525, 580)
 ville_cite37 = Cailloux(475, 580)
 ville_cite38 = Cailloux(425, 580)
 ville_cite39 = Cailloux(375, 580)
-ville_cite40 = Cailloux(370, 639)
+ville_cite40 = Cailloux(375, 639)
 ville_cite41 = Cailloux(205, 248)
 ville_cite42 = Cailloux(255, 248)
 ville_cite43 = Cailloux(305, 248)
@@ -426,26 +426,45 @@ Mob_Liste = []
 Plaine_Hitbox = []
 Glace_Hitbox = [Glace2_Cailloux1, Glace2_Cailloux2, Glace2_Cailloux3, Glace2_Cailloux4, Glace2_Cailloux4, Glace2_Cailloux5, Glace2_Cailloux6, Glace2_Cailloux7, Glace2_Cailloux8]
 Sortieoui = []
+Sortieoui2 = []
 MarchandList = []
 
-Plaine_Map = Salle(Pnj_List_Shop, Mob_Liste, Item_List_Shop, Plaine_Image, 450, 0, Plaine_Hitbox, Sortieoui, MarchandList)
 Glace2_Map = Salle(Pnj_List_Shop, Mob_Liste, Item_List_Shop, Glace2_Image, 450, 0, Glace_Hitbox, Sortieoui, MarchandList)
+Plaine_Map = Salle(Pnj_List_Shop, Mob_Liste, Item_List_Shop, Plaine_Image, 450, 0, Plaine_Hitbox, Sortieoui2, MarchandList)
+
+# Création Boss
+
+Mob_Liste_Boss = []
+Boss_Hitbox = []
+Sortieoui3 = []
+MarchandList = []
+Map_Boss = Salle(Pnj_List_Shop, Mob_Liste, Item_List_Shop, Boss_Image, 450, 0, Boss_Hitbox, Sortieoui3, MarchandList)
+
 
 # Déclaration des sorties
-Sortie_Glace_Glace2 = ChangeSalle(450, 0, "paillasson.png", Glace2_Map, 250, 150, 250, 740)
-Sortie_Base_Glace = ChangeSalle(560, 0, "paillasson.png", Map_Glace, 250, 150, 250, 740)
-Sortie_Base_Plaine = ChangeSalle(983, 365, "paillasson.png", Plaine_Map,0,100,50,150)
+Sortie_Glace2_Glace = ChangeSalle(500, 0, "paillasson.png", Map_Glace, 220, 150, 265, 527)
+Sortie_Glace_Glace2 = ChangeSalle(470, 728, "paillasson.png", Glace2_Map, 250, 0, 275, 34)
+Sortie_Glace_Boss = ChangeSalle(470, 0, "paillasson.png", Map_Boss, 100, 200, 280, 550)
+Sortie_Glace2_Base = ChangeSalle(500, 1170, "paillasson.png", Map_Base, 235, 0, 325, 40)
+Sortie_Base_Glace2 = ChangeSalle(560, 0, "paillasson.png", Glace2_Map, 250, 600, 271, 519)
+Sortie_Base_Plaine = ChangeSalle(977, 340, "paillassonverticale.png", Plaine_Map, 0, 301, 34, 280)
+Sortie_Plaine_Base = ChangeSalle(0, 566, "paillassonverticale.png", Map_Base, 400, 14, 533, 346)
 Sortie_Base_Shop1 = ChangeSalle(690, 310, "paillasson_petit.png", Shop_Map, 50, 0, 290, 540)
 Sortie_Base_Shop2 = ChangeSalle(305, 503, "paillasson_petit.png", Shop2_Map, 250, 150, 250, 550)
-Sortie_Shop1_Base = ChangeSalle(320, 670, "paillasson.png", Map_Base, 300, 0, 405, 350)
-Sortie_Shop2_Base = ChangeSalle(475, 834, "paillasson.png", Map_Base, 0, 0, 253, 520)
+Sortie_Shop1_Base = ChangeSalle(320, 670, "paillasson.png", Map_Base, 300, 0, 390, 335)
+Sortie_Shop2_Base = ChangeSalle(475, 834, "paillasson.png", Map_Base, 0, 0, 305, 526)
+
 
 # On met les sorties dans chaque Salle
-Map_Base.a_Sortie_Liste.append(Sortie_Base_Glace)
+Map_Base.a_Sortie_Liste.append(Sortie_Base_Glace2)
 Map_Base.a_Sortie_Liste.append(Sortie_Base_Shop1)
 Map_Base.a_Sortie_Liste.append(Sortie_Base_Shop2)
 Map_Base.a_Sortie_Liste.append(Sortie_Base_Plaine)
+Glace2_Map.a_Sortie_Liste.append(Sortie_Glace2_Glace)
+Glace2_Map.a_Sortie_Liste.append(Sortie_Glace2_Base)
+Plaine_Map.a_Sortie_Liste.append(Sortie_Plaine_Base)
 Map_Glace.a_Sortie_Liste.append(Sortie_Glace_Glace2)
+Map_Glace.a_Sortie_Liste.append(Sortie_Glace_Boss)
 Shop_Map.a_Sortie_Liste.append(Sortie_Shop1_Base)
 Shop2_Map.a_Sortie_Liste.append(Sortie_Shop2_Base)
 
@@ -566,7 +585,7 @@ def isSliding(perso):
     if CurrentMap != Map_Glace:
         # print("false")
         return False
-    if (345 < x < 649 and 0 <= y < 231 ) or (294 < x < 716 and 640 < y < 760):
+    if (345 < x < 649 and 0 <= y < 180 ) or (294 < x < 716 and 640 < y < 760) or ( 52 < x < 100 and 692 < y < 761) or (897 < x < 950 and 692 < y < 761):
         # print("false")
         return False
     else:
