@@ -37,3 +37,9 @@ class ChangeSalle:
         self.aY_Decor = py_decor
         self.aX_Perso = px_perso
         self.aY_Perso = py_perso
+
+class ChangeSalleCondi(ChangeSalle):
+
+    def __init__(self, px, py, p_image, p_salle, px_decor, py_decor, px_perso, py_perso):
+        ChangeSalle.__init__(px, py, p_image, p_salle, px_decor, py_decor, px_perso, py_perso)
+

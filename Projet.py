@@ -1,4 +1,5 @@
 import inspect
+import time
 import os
 import pygame
 from Class.Button import Button_lvl
@@ -6,7 +7,7 @@ from Class.Cailloux import Cailloux
 from Class.Hero import Hero
 from Class.Item import Epee, Bottes, Armure
 from Class.Mob import Mob
-from Class.Perso import Pnj, MarchandArme, MarchandMagie
+from Class.Perso import Pnj, MarchandArme, MarchandMagie, PnjMouv
 from Class.Salle import Salle, ChangeSalle
 from Class.Shop import Shop
 
@@ -16,37 +17,60 @@ scriptPATH = os.path.abspath(inspect.getsourcefile(lambda: 0))  # compatible int
 scriptDIR = os.path.dirname(scriptPATH)
 assets = os.path.join(scriptDIR, "data")
 
+# Image du title screen
+Title_Screen = pygame.image.load(os.path.join(assets, "TitleScreenV1.png"))
+
+Selection_Screen = pygame.image.load(os.path.join(assets, "Selection de sexe.png"))
+
+Couleur_Screen = pygame.image.load(os.path.join(assets, "Selection Couleur.png"))
+
 # Charge les images des différentes map
-Map_Base_Image = pygame.image.load(os.path.join(assets, "Carte.jpg"))
+Map_Base_Image = pygame.image.load(os.path.join(assets, "cités.png"))
 Map_Glace_Image = pygame.image.load(os.path.join(assets, "Glace.PNG"))
-Map_Lave_Image = pygame.image.load(os.path.join(assets, "Lave.PNG"))
+Shop1_Image = pygame.image.load(os.path.join(assets, "shop1.png"))
+Shop2_Image = pygame.image.load(os.path.join(assets, "shop2.png"))
+Plaine_Image = pygame.image.load(os.path.join(assets, "Plaine.png"))
+Glace2_Image = pygame.image.load(os.path.join(assets, "Glace2.png"))
+Boss_Image = pygame.image.load(os.path.join(assets, "Boss.png"))
 
 # Création équipement
-Excalibur = Epee("Excalibur", 1, 10, "C'est soit disant la meilleur épée du royaume")
-Excalibur.a_Image = pygame.image.load(os.path.join(assets, "Epee.png"))
+Excalibur = Epee("Epee basique", 5, 10, "Un bon équipement de premier prix")
+Excalibur.a_Image = pygame.image.load(os.path.join(assets, "épée1.png"))
 Excalibur.a_Image = pygame.transform.scale(Excalibur.a_Image, (100, 100))
-Tee_shirt = Armure("Tee_shirt", 1, 10, "Au moins vos bourrelets ne se verront plus")
-Tee_shirt.a_Image = pygame.image.load(os.path.join(assets, "Haut.png"))
+
+Tee_shirt = Armure("Armure ", 5, 10, "Peut vous protéger des coups les moins forts")
+Tee_shirt.a_Image = pygame.image.load(os.path.join(assets, "armure1.png"))
 Tee_shirt.a_Image = pygame.transform.scale(Tee_shirt.a_Image, (100, 100))
-Sandales = Bottes("Bottes", 1, 5, "Au moins si vous marchez dans la boue tout ira bien")
-Sandales.a_Image = pygame.image.load(os.path.join(assets, "Bottes.jpg"))
+
+Sandales = Bottes("Bottes", 5, 2, "Vous permet d'augmenter un petit peu votre vitesse")
+Sandales.a_Image = pygame.image.load(os.path.join(assets, "botte1.png"))
 Sandales.a_Image = pygame.transform.scale(Sandales.a_Image, (100, 100))
+
+Excalibur2 = Epee("Epee Magique", 10, 20, "Une excellente épée faite pour les meilleurs")
+Excalibur2.a_Image = pygame.image.load(os.path.join(assets, "épée2.png"))
+Excalibur2.a_Image = pygame.transform.scale(Excalibur.a_Image, (100, 100))
+
+Armure2 = Armure("Armure Enchantée", 10, 20, "Permet de réduire considérablement les dégâts subit")
+Armure2.a_Image = pygame.image.load(os.path.join(assets, "armure1.png"))
+Armure2.a_Image = pygame.transform.scale(Tee_shirt.a_Image, (100, 100))
+
+Bottesa = Bottes("Bottes Ailées", 10, 6, "Permet de courir sans effort")
+Bottesa.a_Image = pygame.image.load(os.path.join(assets, "botte1.png"))
+Bottesa.a_Image = pygame.transform.scale(Sandales.a_Image, (100, 100))
 
 # Création Shop
 Shop_Arme_Base = Shop(Excalibur, Tee_shirt, Sandales)
 
-Shop_Magie_Base = Shop(Sandales, Sandales, Excalibur)
+Shop_Magie_Base = Shop(Excalibur2, Armure2, Bottesa)
 
 # Création marchant
-Marchand_Arme = MarchandArme(800, 800, "Marchand_Arme.png", Shop_Arme_Base)
-Marchand_Arme.aImage = pygame.transform.scale(Marchand_Arme.aImage, (100, 160))
+Marchand_Arme = MarchandArme(341, 218, "Marchand_Arme.png", Shop_Arme_Base)
 
-Marchand_Magie = MarchandMagie(800, 1000, "Marchand_Magie.png", Shop_Magie_Base)
-Marchand_Magie.aImage = pygame.transform.scale(Marchand_Magie.aImage, (100, 160))
-# Création salle de base
+Marchand_Magie = MarchandMagie(490, 335, "Marchand_Magie.png", Shop_Magie_Base)
+
+
 # Pnj
-Megumin = Pnj(1125, 450, "Megumin.png", "Bonjour EXPLOSION", "Megumin")
-Megumin.aImage = pygame.transform.scale(Megumin.aImage, (100, 160))
+Megumin = PnjMouv(620, 545, "Megumin.png", "Bonjour", "Habitant")
 
 # Mob
 Mob_1 = Mob(500, 500, 100, "Megumin.png", 5, 100, 10, 5)
@@ -59,8 +83,9 @@ Mob_3 = Mob(100, 100, 100, "Megumin.png", 5, 100, 10, 5)
 Mob_3.aImage = pygame.transform.scale(Megumin.aImage, (100, 160))
 
 # Création cailloux
+
 Glace_Cailloux1 = Cailloux(303, 297)
-Glace_Cailloux2 = Cailloux(417, 356)
+Glace_Cailloux2 = Cailloux(423, 356)
 Glace_Cailloux3 = Cailloux(475, 409)
 Glace_Cailloux4 = Cailloux(65, 349)
 Glace_Cailloux5 = Cailloux(241, 472)
@@ -91,14 +116,255 @@ Glace_Cailloux29 = Cailloux(299, 1)
 Glace_Cailloux30 = Cailloux(361, 56)
 Glace_Cailloux31 = Cailloux(652, 1)
 Glace_Cailloux32 = Cailloux(593, 56)
-Glace_Cailloux33 = Cailloux(241, 585)
+Glace_Cailloux33 = Cailloux(241, 588)
 Glace_Cailloux34 = Cailloux(241, 635)
-Glace_Cailloux35 = Cailloux(705, 585)
+Glace_Cailloux35 = Cailloux(705, 588)
 Glace_Cailloux36 = Cailloux(705, 635)
 Glace_Cailloux37 = Cailloux(180, 646)
 Glace_Cailloux38 = Cailloux(180, 704)
 Glace_Cailloux39 = Cailloux(768, 646)
 Glace_Cailloux40 = Cailloux(768, 704)
+
+ville_pub1 = Cailloux(387, 185)
+ville_pub2 = Cailloux(387, 234)
+ville_pub3 = Cailloux(437, 185)
+ville_pub4 = Cailloux(475, 185)
+ville_pub5 = Cailloux(436, 234)
+ville_pub6 = Cailloux(475, 234)
+
+ville_guilde1 = Cailloux(663, 156)
+ville_guilde2 = Cailloux(712, 156)
+ville_guilde3 = Cailloux(761, 156)
+ville_guilde4 = Cailloux(805, 156)
+ville_guilde5 = Cailloux(663, 215)
+ville_guilde6 = Cailloux(663, 260)
+ville_guilde7 = Cailloux(712, 260)
+ville_guilde8 = Cailloux(761, 260)
+ville_guilde9 = Cailloux(805, 260)
+ville_guilde10 = Cailloux(805, 215)
+
+ville_shop1 = Cailloux(219, 402)
+ville_shop2 = Cailloux(268, 402)
+ville_shop3 = Cailloux(318, 402)
+ville_shop4 = Cailloux(368, 402)
+ville_shop5 = Cailloux(418, 402)
+ville_shop6 = Cailloux(468, 402)
+ville_shop7 = Cailloux(475, 402)
+ville_shop8 = Cailloux(220, 450)
+ville_shop9 = Cailloux(270, 450)
+ville_shop10 = Cailloux(320, 450)
+ville_shop11 = Cailloux(370, 450)
+ville_shop12 = Cailloux(420, 450)
+ville_shop13 = Cailloux(470, 450)
+ville_shop14 = Cailloux(475, 450)
+
+ville_maison1 = Cailloux(167, 47)
+ville_maison2 = Cailloux(217, 47)
+ville_maison3 = Cailloux(255, 47)
+ville_maison4 = Cailloux(167, 107)
+ville_maison5 = Cailloux(255, 107)
+ville_maison6 = Cailloux(167, 167)
+ville_maison7 = Cailloux(255, 167)
+ville_maison8 = Cailloux(167, 224)
+ville_maison9 = Cailloux(255, 224)
+ville_maison10 = Cailloux(167, 233)
+ville_maison11 = Cailloux(217, 233)
+ville_maison12 = Cailloux(255, 233)
+
+ville_eau1 = Cailloux(935, 451)
+ville_eau2 = Cailloux(950, 451)
+
+ville_cite1 = Cailloux(281, 639)
+ville_cite2 = Cailloux(281, 580)
+ville_cite3 = Cailloux(232, 580)
+ville_cite4 = Cailloux(183, 580)
+ville_cite5 = Cailloux(133, 580)
+ville_cite6 = Cailloux(83, 580)
+ville_cite7 = Cailloux(33, 580)
+ville_cite8 = Cailloux(1, 521)
+ville_cite9 = Cailloux(1, 461)
+ville_cite10 = Cailloux(1, 401)
+ville_cite11 = Cailloux(1, 341)
+ville_cite12 = Cailloux(1, 281)
+ville_cite13 = Cailloux(1, 221)
+ville_cite14 = Cailloux(35, 108)
+ville_cite15 = Cailloux(83, 64)
+ville_cite16 = Cailloux(132, 64)
+ville_cite17 = Cailloux(162, 109)
+ville_cite18 = Cailloux(211, 65)
+ville_cite19 = Cailloux(261, 65)
+ville_cite20 = Cailloux(311, 65)
+ville_cite21 = Cailloux(361, 65)
+ville_cite22 = Cailloux(411, 65)
+ville_cite23 = Cailloux(458, 65)
+ville_cite24 = Cailloux(490, 109)
+ville_cite25 = Cailloux(539, 65)
+ville_cite26 = Cailloux(589, 65)
+ville_cite27 = Cailloux(614, 109)
+ville_cite28 = Cailloux(652, 168)
+ville_cite29 = Cailloux(652, 228)
+ville_cite30 = Cailloux(652, 288)
+ville_cite31 = Cailloux(652, 348)
+ville_cite32 = Cailloux(652, 408)
+ville_cite33 = Cailloux(652, 468)
+ville_cite34 = Cailloux(602, 493)
+ville_cite35 = Cailloux(574, 533)
+ville_cite36 = Cailloux(525, 580)
+ville_cite37 = Cailloux(475, 580)
+ville_cite38 = Cailloux(425, 580)
+ville_cite39 = Cailloux(375, 580)
+ville_cite40 = Cailloux(370, 639)
+ville_cite41 = Cailloux(205, 248)
+ville_cite42 = Cailloux(255, 248)
+ville_cite43 = Cailloux(305, 248)
+ville_cite44 = Cailloux(355, 248)
+ville_cite45 = Cailloux(405, 248)
+ville_cite46 = Cailloux(444, 248)
+#ville_cite47 = Cailloux(326, 227)
+ville_cite48 = Cailloux(326, 166)
+ville_cite49 = Cailloux(205, 308)
+ville_cite50 = Cailloux(205, 325)
+ville_cite51 = Cailloux(255, 325)
+ville_cite52 = Cailloux(305, 325)
+ville_cite53 = Cailloux(355, 325)
+ville_cite54 = Cailloux(405, 325)
+ville_cite55 = Cailloux(444, 325)
+ville_cite56 = Cailloux(1, 156)
+
+shop_magie_Cailloux1 = Cailloux(0,0)
+shop_magie_Cailloux2 = Cailloux(50,0)
+shop_magie_Cailloux3 = Cailloux(100,0)
+shop_magie_Cailloux4 = Cailloux(150,0)
+shop_magie_Cailloux5 = Cailloux(200,0)
+shop_magie_Cailloux6 = Cailloux(250,0)
+shop_magie_Cailloux7 = Cailloux(300,0)
+shop_magie_Cailloux8 = Cailloux(350,0)
+shop_magie_Cailloux9 = Cailloux(400,0)
+shop_magie_Cailloux10 = Cailloux(450,0)
+shop_magie_Cailloux11 = Cailloux(500,0)
+shop_magie_Cailloux12 = Cailloux(550,0)
+shop_magie_Cailloux13 = Cailloux(600,0)
+shop_magie_Cailloux14 = Cailloux(650,0)
+shop_magie_Cailloux15 = Cailloux(700,0)
+shop_magie_Cailloux16 = Cailloux(750,0)
+shop_magie_Cailloux17 = Cailloux(800,0)
+shop_magie_Cailloux18 = Cailloux(850,0)
+shop_magie_Cailloux19 = Cailloux(900,0)
+shop_magie_Cailloux20 = Cailloux(950,0)
+shop_magie_Cailloux21 = Cailloux(1000,0)
+shop_magie_Cailloux22 = Cailloux(0,60)
+shop_magie_Cailloux23 = Cailloux(50,60)
+shop_magie_Cailloux24 = Cailloux(100,60)
+shop_magie_Cailloux25 = Cailloux(150,60)
+shop_magie_Cailloux26 = Cailloux(200,60)
+shop_magie_Cailloux27 = Cailloux(250,60)
+shop_magie_Cailloux28 = Cailloux(300,60)
+shop_magie_Cailloux29 = Cailloux(350,60)
+shop_magie_Cailloux30 = Cailloux(400,60)
+shop_magie_Cailloux31 = Cailloux(450,60)
+shop_magie_Cailloux32 = Cailloux(500,60)
+shop_magie_Cailloux33 = Cailloux(550,60)
+shop_magie_Cailloux34 = Cailloux(600,60)
+shop_magie_Cailloux35 = Cailloux(650,60)
+shop_magie_Cailloux36 = Cailloux(700,60)
+shop_magie_Cailloux37 = Cailloux(750,60)
+shop_magie_Cailloux38 = Cailloux(800,60)
+shop_magie_Cailloux39 = Cailloux(850,60)
+shop_magie_Cailloux40 = Cailloux(900,60)
+shop_magie_Cailloux41 = Cailloux(950,60)
+shop_magie_Cailloux42 = Cailloux(1000,60)
+shop_magie_Cailloux43 = Cailloux(0,120)
+shop_magie_Cailloux44 = Cailloux(50,120)
+shop_magie_Cailloux45 = Cailloux(100,120)
+shop_magie_Cailloux46 = Cailloux(150,120)
+shop_magie_Cailloux47 = Cailloux(200,120)
+shop_magie_Cailloux48 = Cailloux(250,120)
+shop_magie_Cailloux49 = Cailloux(300,120)
+shop_magie_Cailloux50 = Cailloux(350,120)
+shop_magie_Cailloux51 = Cailloux(400,120)
+shop_magie_Cailloux52 = Cailloux(450,120)
+shop_magie_Cailloux53 = Cailloux(500,120)
+shop_magie_Cailloux54 = Cailloux(550,120)
+shop_magie_Cailloux55 = Cailloux(600,120)
+shop_magie_Cailloux56 = Cailloux(650,120)
+shop_magie_Cailloux57 = Cailloux(700,120)
+shop_magie_Cailloux58 = Cailloux(750,120)
+shop_magie_Cailloux59 = Cailloux(800,120)
+shop_magie_Cailloux60 = Cailloux(850,120)
+shop_magie_Cailloux61 = Cailloux(900,120)
+shop_magie_Cailloux62 = Cailloux(950,120)
+shop_magie_Cailloux63 = Cailloux(950,120)
+shop_magie_Cailloux64 = Cailloux(0,180)
+shop_magie_Cailloux65 = Cailloux(0,240)
+shop_magie_Cailloux66 = Cailloux(0,300)
+shop_magie_Cailloux67 = Cailloux(0,360)
+shop_magie_Cailloux68 = Cailloux(0,420)
+shop_magie_Cailloux69 = Cailloux(0,480)
+shop_magie_Cailloux70 = Cailloux(0,540)
+shop_magie_Cailloux71 = Cailloux(0,600)
+shop_magie_Cailloux72 = Cailloux(0,660)
+shop_magie_Cailloux73 = Cailloux(0,720)
+shop_magie_Cailloux74 = Cailloux(0,780)
+shop_magie_Cailloux75 = Cailloux(0,840)
+shop_magie_Cailloux76 = Cailloux(0,900)
+shop_magie_Cailloux77 = Cailloux(0,960)
+shop_magie_Cailloux78 = Cailloux(0,1020)
+shop_magie_Cailloux79 = Cailloux(50,720)
+shop_magie_Cailloux80 = Cailloux(100,720)
+shop_magie_Cailloux81 = Cailloux(150,720)
+shop_magie_Cailloux82 = Cailloux(200,720)
+shop_magie_Cailloux83 = Cailloux(250,720)
+shop_magie_Cailloux84 = Cailloux(300,720)
+shop_magie_Cailloux85 = Cailloux(350,720)
+shop_magie_Cailloux86 = Cailloux(400,720)
+shop_magie_Cailloux87 = Cailloux(430,720)
+shop_magie_Cailloux88 = Cailloux(430,720)
+shop_magie_Cailloux89 = Cailloux(430,780)
+shop_magie_Cailloux90 = Cailloux(0,780)
+shop_magie_Cailloux91 = Cailloux(430,780)
+shop_magie_Cailloux92 = Cailloux(0,780)
+shop_magie_Cailloux93 = Cailloux(50,780)
+shop_magie_Cailloux94 = Cailloux(100,780)
+shop_magie_Cailloux95 = Cailloux(150,780)
+shop_magie_Cailloux96 = Cailloux(200,780)
+shop_magie_Cailloux97 = Cailloux(530,720)
+shop_magie_Cailloux98 = Cailloux(530,780)
+shop_magie_Cailloux99 = Cailloux(580,720)
+shop_magie_Cailloux100 = Cailloux(630,720)
+shop_magie_Cailloux101 = Cailloux(680,720)
+shop_magie_Cailloux102 = Cailloux(730,720)
+shop_magie_Cailloux103 = Cailloux(780,720)
+shop_magie_Cailloux104 = Cailloux(830,720)
+shop_magie_Cailloux105 = Cailloux(880,720)
+shop_magie_Cailloux106 = Cailloux(930,720)
+shop_magie_Cailloux107 = Cailloux(950,180)
+shop_magie_Cailloux108 = Cailloux(950,240)
+shop_magie_Cailloux109 = Cailloux(950,300)
+shop_magie_Cailloux110 = Cailloux(950,360)
+shop_magie_Cailloux111 = Cailloux(950,420)
+shop_magie_Cailloux112 = Cailloux(950,480)
+shop_magie_Cailloux113 = Cailloux(950,540)
+shop_magie_Cailloux114 = Cailloux(950,600)
+shop_magie_Cailloux115 = Cailloux(950,660)
+shop_magie_Cailloux116 = Cailloux(950,720)
+shop_magie_Cailloux117 = Cailloux(236,340)
+shop_magie_Cailloux118 = Cailloux(236,376)
+shop_magie_Cailloux119 = Cailloux(720,340)
+shop_magie_Cailloux120 = Cailloux(720,376)
+shop_magie_Cailloux121 = Cailloux(405,373)
+shop_magie_Cailloux122 = Cailloux(455,373)
+shop_magie_Cailloux123 = Cailloux(505,373)
+shop_magie_Cailloux124 = Cailloux(555,373)
+shop_magie_Cailloux125 = Cailloux(480,245)
+
+Glace2_Cailloux1 = Cailloux(815,197)
+Glace2_Cailloux2 = Cailloux(815,232)
+Glace2_Cailloux3 = Cailloux(190,486)
+Glace2_Cailloux4 = Cailloux(190,516)
+Glace2_Cailloux5 = Cailloux(863,868)
+Glace2_Cailloux6 = Cailloux(863,904)
+Glace2_Cailloux7 = Cailloux(94,819)
+Glace2_Cailloux8 = Cailloux(94,854)
 
 # Position de la fenêtre
 J_x_decor_Base = 0
@@ -106,22 +372,22 @@ J_y_decor_Base = 0
 
 Pnj_List_Base = [Megumin]
 
-Mob_List_Base = [Mob_1, Mob_2]
+Mob_List_Base = []
 
 Item_List_Base = []
 
-Hitbox_Base = []
+Hitbox_Base = [ville_pub1, ville_pub2, ville_pub3, ville_pub4 , ville_pub5 , ville_pub6 , ville_guilde1 , ville_guilde2 , ville_guilde3 , ville_guilde4 , ville_guilde5 , ville_guilde6 , ville_guilde7 , ville_guilde8 , ville_guilde9 , ville_guilde10 , ville_shop1 , ville_shop2 , ville_shop3 , ville_shop4 , ville_shop5 , ville_shop6 , ville_shop7 , ville_shop8 , ville_shop9 , ville_shop10 , ville_shop11 , ville_shop12 , ville_shop13 , ville_shop14 , ville_maison1 , ville_maison2 , ville_maison3 , ville_maison4 , ville_maison5 , ville_maison6 , ville_maison7 , ville_maison8 , ville_maison9 , ville_maison10 , ville_maison11 , ville_maison12 , ville_eau1 , ville_eau2]
 
 Sortie_Liste_Base = []
 
-Marchand_Liste_Base = [Marchand_Arme, Marchand_Magie]
+Marchand_Liste_Base = []
 
 Map_Base = Salle(Pnj_List_Base, Mob_List_Base, Item_List_Base, Map_Base_Image, J_x_decor_Base, J_y_decor_Base, Hitbox_Base, Sortie_Liste_Base, Marchand_Liste_Base)
 
 # Création salle dde glace
 Pnj_List_Glace = []
 
-Mob_List_Glace = [Mob_3]
+Mob_List_Glace = []
 
 Item_List_Glace = []
 
@@ -136,15 +402,52 @@ Marchand_Liste_Glace = []
 
 Map_Glace = Salle(Pnj_List_Glace, Mob_List_Glace, Item_List_Glace, Map_Glace_Image, J_x_decor_Glace, J_y_decor_Glace, Hitbox_Glace, Sortie_Liste_Glace, Marchand_Liste_Glace)
 
+# Création Shop Classique
+Pnj_List_Shop = []
+Mob_List_Shop = []
+Item_List_Shop = []
+Hitbox_Shop1 = [ville_cite1, ville_cite2 , ville_cite3 , ville_cite4 , ville_cite5 , ville_cite6 , ville_cite7 , ville_cite8 , ville_cite9 , ville_cite10 , ville_cite11 , ville_cite12 , ville_cite13 , ville_cite14 , ville_cite15 , ville_cite16 , ville_cite17 , ville_cite18 , ville_cite19 , ville_cite20 , ville_cite21 , ville_cite22 , ville_cite23 , ville_cite24 , ville_cite25 , ville_cite26 , ville_cite27 , ville_cite28 , ville_cite29 , ville_cite30 , ville_cite31 , ville_cite32 , ville_cite33 , ville_cite34 , ville_cite35 , ville_cite36 , ville_cite37 , ville_cite38 , ville_cite39 , ville_cite40 , ville_cite41 , ville_cite42 , ville_cite43 , ville_cite44 , ville_cite45 , ville_cite46 , ville_cite48 , ville_cite49 , ville_cite50 , ville_cite51 , ville_cite52 , ville_cite53 , ville_cite54 , ville_cite55, ville_cite56]
+SortieShop1 = []
+Marchand_Shop1 = [Marchand_Arme]
+
+Shop_Map = Salle(Pnj_List_Shop, Mob_List_Shop, Item_List_Shop, Shop1_Image, 0, 0, Hitbox_Shop1, SortieShop1, Marchand_Shop1)
+
+# Création Shop Magie
+
+SortieShop2 = []
+Hitbox_Shop2 = [shop_magie_Cailloux1, shop_magie_Cailloux2, shop_magie_Cailloux3,shop_magie_Cailloux4,shop_magie_Cailloux5,shop_magie_Cailloux6,shop_magie_Cailloux7,shop_magie_Cailloux8,shop_magie_Cailloux9,shop_magie_Cailloux10,shop_magie_Cailloux11,shop_magie_Cailloux12,shop_magie_Cailloux13,shop_magie_Cailloux14,shop_magie_Cailloux15,shop_magie_Cailloux16,shop_magie_Cailloux17,shop_magie_Cailloux18,shop_magie_Cailloux19,shop_magie_Cailloux20,shop_magie_Cailloux21,shop_magie_Cailloux22,shop_magie_Cailloux23,shop_magie_Cailloux24,shop_magie_Cailloux25,shop_magie_Cailloux26,shop_magie_Cailloux27,shop_magie_Cailloux28,shop_magie_Cailloux29,shop_magie_Cailloux30,shop_magie_Cailloux31,shop_magie_Cailloux32,shop_magie_Cailloux33,shop_magie_Cailloux34,shop_magie_Cailloux35,shop_magie_Cailloux36,shop_magie_Cailloux37,shop_magie_Cailloux38,shop_magie_Cailloux39,shop_magie_Cailloux40,shop_magie_Cailloux41,shop_magie_Cailloux42,shop_magie_Cailloux43,shop_magie_Cailloux44,shop_magie_Cailloux45,shop_magie_Cailloux46,shop_magie_Cailloux47,shop_magie_Cailloux48,shop_magie_Cailloux49,shop_magie_Cailloux50,shop_magie_Cailloux51,shop_magie_Cailloux52,shop_magie_Cailloux53,shop_magie_Cailloux54,shop_magie_Cailloux55,shop_magie_Cailloux56,shop_magie_Cailloux57,shop_magie_Cailloux58,shop_magie_Cailloux59,shop_magie_Cailloux60,shop_magie_Cailloux61,shop_magie_Cailloux62,shop_magie_Cailloux63,shop_magie_Cailloux64,shop_magie_Cailloux65,shop_magie_Cailloux66,shop_magie_Cailloux67,shop_magie_Cailloux68,shop_magie_Cailloux69,shop_magie_Cailloux70,shop_magie_Cailloux71,shop_magie_Cailloux72,shop_magie_Cailloux73,shop_magie_Cailloux74,shop_magie_Cailloux75,shop_magie_Cailloux76,shop_magie_Cailloux77,shop_magie_Cailloux78,shop_magie_Cailloux79,shop_magie_Cailloux80,shop_magie_Cailloux81,shop_magie_Cailloux82,shop_magie_Cailloux83,shop_magie_Cailloux84,shop_magie_Cailloux85,shop_magie_Cailloux86,shop_magie_Cailloux87,shop_magie_Cailloux88,shop_magie_Cailloux89,shop_magie_Cailloux90,shop_magie_Cailloux91,shop_magie_Cailloux92,shop_magie_Cailloux93,shop_magie_Cailloux94,shop_magie_Cailloux95,shop_magie_Cailloux96,shop_magie_Cailloux97,shop_magie_Cailloux98,shop_magie_Cailloux99,shop_magie_Cailloux100,shop_magie_Cailloux101,shop_magie_Cailloux102,shop_magie_Cailloux103,shop_magie_Cailloux104,shop_magie_Cailloux105,shop_magie_Cailloux106,shop_magie_Cailloux107,shop_magie_Cailloux108,shop_magie_Cailloux109,shop_magie_Cailloux110,shop_magie_Cailloux111,shop_magie_Cailloux112,shop_magie_Cailloux113,shop_magie_Cailloux114,shop_magie_Cailloux115,shop_magie_Cailloux116,shop_magie_Cailloux117,shop_magie_Cailloux118,shop_magie_Cailloux119,shop_magie_Cailloux120,shop_magie_Cailloux121,shop_magie_Cailloux122,shop_magie_Cailloux123,shop_magie_Cailloux124,shop_magie_Cailloux125]
+Marchand_Shop2 = [Marchand_Magie]
+
+Shop2_Map = Salle(Pnj_List_Shop, Mob_List_Shop, Item_List_Shop, Shop2_Image, 0, 0, Hitbox_Shop2, SortieShop2, Marchand_Shop2)
+
+# Création Plaine et Glace 2
+
+Mob_Liste = []
+Plaine_Hitbox = []
+Glace_Hitbox = [Glace2_Cailloux1, Glace2_Cailloux2, Glace2_Cailloux3, Glace2_Cailloux4, Glace2_Cailloux4, Glace2_Cailloux5, Glace2_Cailloux6, Glace2_Cailloux7, Glace2_Cailloux8]
+Sortieoui = []
+MarchandList = []
+
+Plaine_Map = Salle(Pnj_List_Shop, Mob_Liste, Item_List_Shop, Plaine_Image, 450, 0, Plaine_Hitbox, Sortieoui, MarchandList)
+Glace2_Map = Salle(Pnj_List_Shop, Mob_Liste, Item_List_Shop, Glace2_Image, 450, 0, Glace_Hitbox, Sortieoui, MarchandList)
 
 # Déclaration des sorties
-Sortie_Glace_Base = ChangeSalle(150, 350, "paillasson.png", Map_Base, 500, 500, 0, 0)
-Sortie_Base_Glace = ChangeSalle(100, 100, "paillasson.png", Map_Glace, 0, 0, 500, 0)
+Sortie_Glace_Glace2 = ChangeSalle(450, 0, "paillasson.png", Glace2_Map, 250, 150, 250, 740)
+Sortie_Base_Glace = ChangeSalle(560, 0, "paillasson.png", Map_Glace, 250, 150, 250, 740)
+Sortie_Base_Plaine = ChangeSalle(983, 365, "paillasson.png", Plaine_Map,0,100,50,150)
+Sortie_Base_Shop1 = ChangeSalle(690, 310, "paillasson_petit.png", Shop_Map, 50, 0, 290, 540)
+Sortie_Base_Shop2 = ChangeSalle(305, 503, "paillasson_petit.png", Shop2_Map, 250, 150, 250, 550)
+Sortie_Shop1_Base = ChangeSalle(320, 670, "paillasson.png", Map_Base, 300, 0, 405, 350)
+Sortie_Shop2_Base = ChangeSalle(475, 834, "paillasson.png", Map_Base, 0, 0, 253, 520)
 
 # On met les sorties dans chaque Salle
 Map_Base.a_Sortie_Liste.append(Sortie_Base_Glace)
-Map_Glace.a_Sortie_Liste.append(Sortie_Glace_Base)
-
+Map_Base.a_Sortie_Liste.append(Sortie_Base_Shop1)
+Map_Base.a_Sortie_Liste.append(Sortie_Base_Shop2)
+Map_Base.a_Sortie_Liste.append(Sortie_Base_Plaine)
+Map_Glace.a_Sortie_Liste.append(Sortie_Glace_Glace2)
+Shop_Map.a_Sortie_Liste.append(Sortie_Shop1_Base)
+Shop2_Map.a_Sortie_Liste.append(Sortie_Shop2_Base)
 
 CurrentMap = Map_Base
 Fond = CurrentMap.a_Image
@@ -154,7 +457,7 @@ screenHeight = 600
 Dialogue_x = 200
 Dialogue_Y = 200
 
-Perso_Hero = Hero(250, 250)   # Hero(screenWidth / 2 - 50, screenHeight / 2 - 50)
+Perso_Hero = Hero(220, 310)   # Hero(screenWidth / 2 - 50, screenHeight / 2 - 50)
 
 # Attribut pour savoir si on a ouvert un shop
 AucunShop = 0
@@ -176,20 +479,18 @@ Bouton_vitesse = Button_lvl(Bouton_image, 50, 520)
 
 Bouton_lvl = [Bouton_health, Bouton_mana, Bouton_strength, Bouton_def, Bouton_int, Bouton_vitesse]
 
-#Fonction pour verifier la glissade
+# Déclaration des etats :
+Bas = 00
+Gauche = 1
+Haut = 2
+Droite = 3
 
-def isSliding(perso):
-    x = perso.aX + CurrentMap.a_XDecor
-    y = perso.aY + CurrentMap.a_YDecor
-    if CurrentMap != Map_Glace:
-        print("false")
-        return False
-    if (345 < x < 649 and 0 <= y < 231 ) or (294 < x < 716 and 640 < y < 760):
-        print("false")
-        return False
-    else:
-        print("true")
-        return True
+Attaque = 5
+Idle = 6
+Marche = 7
+
+Homme = 10
+Femme = 20
 
 # Fonction pour verifier la hitbox
 
@@ -198,7 +499,7 @@ def inRects(perso):
     directionblock = [False, False, False, False]
     x = perso.aX
     y = perso.aY
-    height, width = perso.aImage.get_height(), perso.aImage.get_width()
+    height, width = 33, 35
     for one_cailloux in CurrentMap.a_Tab_Hitbox:
         pixel1 = x + width, y
         pixel2 = x + width, y + height
@@ -224,7 +525,7 @@ def inRectsVitesse(perso):
     x = perso.aX
     y = perso.aY
     vitesse = Perso_Hero.vitesse
-    height, width = perso.aImage.get_height(), perso.aImage.get_width()
+    height, width = 33, 35
     for one_cailloux in CurrentMap.a_Tab_Hitbox:
         pixel1 = x + width + vitesse, y
         pixel2 = x + width + vitesse, y + height
@@ -256,6 +557,22 @@ def equipe(p_hero, p_item):
         p_hero.a_armor = p_item
     Perso_Hero.actustat()
 
+# Fonction pour verifier la glissade
+
+
+def isSliding(perso):
+    x = perso.aX + CurrentMap.a_XDecor
+    y = perso.aY + CurrentMap.a_YDecor
+    if CurrentMap != Map_Glace:
+        # print("false")
+        return False
+    if (345 < x < 649 and 0 <= y < 231 ) or (294 < x < 716 and 640 < y < 760):
+        # print("false")
+        return False
+    else:
+        # print("true")
+        return True
+
 
 ###################################################################################
 # Initialize pygame
@@ -266,21 +583,86 @@ text_font = pygame.font.SysFont("arial", 50)
 Gold_font = pygame.font.SysFont("arial", 20)
 
 # Set the width and height of the screen [width,height]
-screen = pygame.display.set_mode((screenWidth, screenHeight))
+screen = pygame.display.set_mode((800, 400))
+# screen = pygame.display.set_mode((screenWidth, screenHeight))
 
 # Set title of screen
 pygame.display.set_caption("Oui")
 
 # Loop until the user clicks the close button.
 done = False
+done2 = False
+done3 = False
+done4 = False
 
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 
 pygame.mouse.set_visible(1)
 
+
 # Programme principal
 while not done:
+
+    while not done2:
+        for event in pygame.event.get():  # User did something
+
+            if event.type == pygame.QUIT:  # If user clicked close
+                done = True  # Flag that we are done so we exit this loop
+                done2 = True
+                done3 = True
+                done4 = True
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            done2 = True
+            time.sleep(0.3)
+        screen.blit(Title_Screen, (0, 0))
+
+        pygame.display.flip()
+
+    while not done3:
+        for event in pygame.event.get():  # User did something
+
+            if event.type == pygame.QUIT:  # If user clicked close
+                done = True  # Flag that we are done so we exit this loop
+                done3 = True
+                done4 = True
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            pos = pygame.mouse.get_pos()
+            x = pos[0]
+            if x<400:
+                Perso_Hero.a_genre = Homme
+            done3 = True
+            time.sleep(0.3)
+        screen.blit(Selection_Screen, (0, 0))
+
+        pygame.display.flip()
+
+    while not done4:
+        for event in pygame.event.get():  # User did something
+
+            if event.type == pygame.QUIT:  # If user clicked close
+                done = True  # Flag that we are done so we exit this loop
+                done4 = True
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            pos = pygame.mouse.get_pos()
+            x = pos[0]
+            if 0 <= x < 266:
+                Perso_Hero.a_color = 0
+            elif 266 <= x < 532:
+                Perso_Hero.a_color = 1
+            elif 532 <= x:
+                Perso_Hero.a_color = 2
+            done4 = True
+            Perso_Hero.updatesprite()
+            time.sleep(0.3)
+            screen = pygame.display.set_mode((screenWidth, screenHeight))
+        screen.blit(Couleur_Screen, (0, 0))
+
+        pygame.display.flip()
+
     event = pygame.event.Event(pygame.USEREVENT)
 
     for event in pygame.event.get():  # User did something
@@ -290,16 +672,24 @@ while not done:
 
     KeysPressed = pygame.key.get_pressed()
 
-    # Déplacement du Hero si il n'est pas entrain de faire une autre action
+    time = int(pygame.time.get_ticks() / 100)
 
+    # Déplacement du Hero si il n'est pas entrain de faire une autre action
     if Perso_Hero.a_Duree == 0:
+
+        if not KeysPressed[pygame.K_UP] and not KeysPressed[pygame.K_DOWN] and not KeysPressed[pygame.K_RIGHT] and not KeysPressed[pygame.K_LEFT]:
+            Perso_Hero.a_Etat = Idle
+
         collision = inRects(Perso_Hero)
         collision_vitesse = inRectsVitesse(Perso_Hero)
+
         # if ne glisse pas, alors on gère toutes les directions
-        if Perso_Hero.a_etat == "marche" :
+
+        if Perso_Hero.a_etat == "marche":
             if KeysPressed[pygame.K_UP] and collision[3] is False:
-                Perso_Hero.changei("HeroH")
-                if isSliding(Perso_Hero) is True and CurrentMap == Map_Glace :
+                Perso_Hero.a_Etat = Marche
+                Perso_Hero.a_dir = Haut
+                if isSliding(Perso_Hero) is True and CurrentMap == Map_Glace:
                     Perso_Hero.a_etat = "slide_up"
                 if collision_vitesse[3] is not False:
                     Perso_Hero.aY = collision_vitesse[3] - CurrentMap.a_YDecor + 1
@@ -314,13 +704,13 @@ while not done:
                             CurrentMap.a_YDecor = 0
                             Perso_Hero.aY -= Perso_Hero.vitesse
 
-
             if KeysPressed[pygame.K_DOWN] and collision[1] is False:
-                Perso_Hero.changei("Hero")
-                if isSliding(Perso_Hero) is True and CurrentMap == Map_Glace :
+                Perso_Hero.a_Etat = Marche
+                Perso_Hero.a_dir = Bas
+                if isSliding(Perso_Hero) is True and CurrentMap == Map_Glace:
                     Perso_Hero.a_etat = "slide_down"
                 if collision_vitesse[1] is not False:
-                    Perso_Hero.aY = collision_vitesse[1] - Perso_Hero.aImage.get_height() - CurrentMap.a_YDecor - 1
+                    Perso_Hero.aY = collision_vitesse[1] - 33 - CurrentMap.a_YDecor - 1
                 else:
                     if Perso_Hero.aY < screenHeight / 2 - 25:
                         Perso_Hero.aY += Perso_Hero.vitesse
@@ -333,8 +723,9 @@ while not done:
                             Perso_Hero.aY += Perso_Hero.vitesse
 
             if KeysPressed[pygame.K_LEFT] and collision[2] is False:
-                Perso_Hero.changei("HeroG")
-                if isSliding(Perso_Hero) is True and CurrentMap == Map_Glace :
+                Perso_Hero.a_Etat = Marche
+                Perso_Hero.a_dir = Gauche
+                if isSliding(Perso_Hero) is True and CurrentMap == Map_Glace:
                     Perso_Hero.a_etat = "slide_left"
                 if collision_vitesse[2] is not False:
                     Perso_Hero.aX = collision_vitesse[2] - CurrentMap.a_XDecor + 1
@@ -350,11 +741,12 @@ while not done:
                             Perso_Hero.aX -= Perso_Hero.vitesse
 
             if KeysPressed[pygame.K_RIGHT] and collision[0] is False:
-                Perso_Hero.changei("HeroD")
+                Perso_Hero.a_Etat = Marche
+                Perso_Hero.a_dir = Droite
                 if isSliding(Perso_Hero) is True and CurrentMap == Map_Glace:
                     Perso_Hero.a_etat = "slide_right"
                 if collision_vitesse[0] is not False:
-                    Perso_Hero.aX = collision_vitesse[0] - Perso_Hero.aImage.get_width() - CurrentMap.a_XDecor - 1
+                    Perso_Hero.aX = collision_vitesse[0] - 35 - CurrentMap.a_XDecor - 1
                 else:
                     if Perso_Hero.aX < screenWidth / 2 - 25:
                         Perso_Hero.aX += Perso_Hero.vitesse
@@ -365,9 +757,7 @@ while not done:
                         if CurrentMap.a_XDecor + screenWidth > Fond.get_width():
                             CurrentMap.a_XDecor = Fond.get_width() - screenWidth
                             Perso_Hero.aX += Perso_Hero.vitesse
-
-
-        elif Perso_Hero.a_etat == "slide_up" :
+        elif Perso_Hero.a_etat == "slide_up":
             if collision_vitesse[3] is not False:
                 Perso_Hero.aY = collision_vitesse[3] - CurrentMap.a_YDecor + 1
                 Perso_Hero.a_etat = "marche"
@@ -384,9 +774,9 @@ while not done:
                         CurrentMap.a_YDecor = 0
                         Perso_Hero.aY -= Perso_Hero.vitesse
 
-        elif Perso_Hero.a_etat == "slide_down" :
+        elif Perso_Hero.a_etat == "slide_down":
             if collision_vitesse[1] is not False:
-                Perso_Hero.aY = collision_vitesse[1] - Perso_Hero.aImage.get_height() - CurrentMap.a_YDecor - 1
+                Perso_Hero.aY = collision_vitesse[1] - 33 - CurrentMap.a_YDecor - 1
                 Perso_Hero.a_etat = "marche"
             elif not isSliding(Perso_Hero):
                 Perso_Hero.a_etat = "marche"
@@ -400,7 +790,6 @@ while not done:
                     if CurrentMap.a_YDecor + screenHeight > Fond.get_height():
                         CurrentMap.a_YDecor = Fond.get_height() - screenHeight
                         Perso_Hero.aY += Perso_Hero.vitesse
-
 
         elif Perso_Hero.a_etat == "slide_left":
             if collision_vitesse[2] is not False:
@@ -421,7 +810,7 @@ while not done:
 
         elif Perso_Hero.a_etat == "slide_right":
             if collision_vitesse[0] is not False:
-                Perso_Hero.aX = collision_vitesse[0] - Perso_Hero.aImage.get_width() - CurrentMap.a_XDecor - 1
+                Perso_Hero.aX = collision_vitesse[0] - 35 - CurrentMap.a_XDecor - 1
                 Perso_Hero.a_etat = "marche"
             elif not isSliding(Perso_Hero):
                 Perso_Hero.a_etat = "marche"
@@ -437,7 +826,7 @@ while not done:
                         Perso_Hero.aX += Perso_Hero.vitesse
 
         else:
-            print("wtf dude")
+            print("oui")
 
         # Sinon, alors on bouge dans la direction retenue pendant la glissade
         # On check les collisions
@@ -453,19 +842,21 @@ while not done:
     if Perso_Hero.aY < 0:
         Perso_Hero.aY = 0
         Perso_Hero.a_etat = "marche"
-    if Perso_Hero.aX + Perso_Hero.aImage.get_width() > screenWidth:
-        Perso_Hero.aX = screenWidth - Perso_Hero.aImage.get_width()
+    if Perso_Hero.aX + 35 > screenWidth:
+        Perso_Hero.aX = screenWidth - 35
         Perso_Hero.a_etat = "marche"
-    if Perso_Hero.aY + Perso_Hero.aImage.get_height() > screenHeight:
-        Perso_Hero.aY = screenHeight - Perso_Hero.aImage.get_height()
+    if Perso_Hero.aY + 33 > screenHeight:
+        Perso_Hero.aY = screenHeight - 33
         Perso_Hero.a_etat = "marche"
-    hero_hitbox = (Perso_Hero.aX, Perso_Hero.aY, Perso_Hero.aImage.get_height(), Perso_Hero.aImage.get_width())
+    hero_hitbox = (Perso_Hero.aX, Perso_Hero.aY, 33, 35)
 
+# Affiche les hitbox des cailloux
     for onecailloux in CurrentMap.a_Tab_Hitbox:
         onecailloux.affiche_aX = onecailloux.aX - CurrentMap.a_XDecor
         onecailloux.affiche_aY = onecailloux.aY - CurrentMap.a_YDecor
+        pygame.draw.rect(screen, (255, 0, 0), (onecailloux.affiche_aX, onecailloux.affiche_aY, 50, 60), 2)
 
-
+# Test si le joueurs se trouve près d'un marchand pour ouvrir le shop
     for one_marchant in CurrentMap.a_Marchand_Liste:
         QuelMarchand = Perso_Hero.ismarchand(one_marchant, CurrentMap .a_XDecor, CurrentMap.a_YDecor)
         if QuelMarchand == "MarchandArme":
@@ -480,7 +871,7 @@ while not done:
 # Affichage du shop actuel
     if CurrentShop == Shop_Arme:
         if event.type == pygame.MOUSEBUTTONDOWN:
-            print("Achat arme")
+            # print("Achat arme")
             pos = pygame.mouse.get_pos()
             y = pos[1]
             if 10 <= y <= 193:
@@ -503,7 +894,7 @@ while not done:
                         Shop_Arme_Base.a_Item3 = None
     elif CurrentShop == Shop_Magie:
         if event.type == pygame.MOUSEBUTTONDOWN:
-            print("Achat magie")
+            # print("Achat magie")
             pos = pygame.mouse.get_pos()
             y = pos[1]
             if 10 <= y <= 193:
@@ -533,7 +924,7 @@ while not done:
 
 # Test si le perso est proche de la sortie, si oui le change de salle
     for one_Sortie in CurrentMap.a_Sortie_Liste:
-        if Perso_Hero.aX + Perso_Hero.aImage.get_width() > one_Sortie.aX - CurrentMap.a_XDecor and Perso_Hero.aX < one_Sortie.aX + one_Sortie.a_Image.get_width() - CurrentMap.a_XDecor and Perso_Hero.aY + Perso_Hero.aImage.get_height() > one_Sortie.aY - CurrentMap.a_YDecor and Perso_Hero.aY < one_Sortie.aY + one_Sortie.a_Image.get_height() - CurrentMap.a_YDecor:
+        if Perso_Hero.aX + 35 > one_Sortie.aX - CurrentMap.a_XDecor and Perso_Hero.aX < one_Sortie.aX + one_Sortie.a_Image.get_width() - CurrentMap.a_XDecor and Perso_Hero.aY + 33 > one_Sortie.aY - CurrentMap.a_YDecor and Perso_Hero.aY < one_Sortie.aY + one_Sortie.a_Image.get_height() - CurrentMap.a_YDecor:
             CurrentMap = one_Sortie.a_Salle
             Fond = CurrentMap.a_Image
             CurrentMap.a_XDecor = one_Sortie.aX_Decor
@@ -546,10 +937,14 @@ while not done:
     screen.blit(Fond, (0, 0), area=ZoneCam)
 
 # Affiche le perso
-    screen.blit(Perso_Hero.aImage, (Perso_Hero.aX, Perso_Hero.aY))
+    screen.blit(Perso_Hero.quelimage(time), (Perso_Hero.aX, Perso_Hero.aY))
+
+    pygame.draw.rect(screen, (255, 0, 0), hero_hitbox, 2)
+    pygame.draw.rect(screen, (255, 0, 255), (Perso_Hero.aX - Perso_Hero.vitesse, Perso_Hero.aY - Perso_Hero.vitesse, 33 + 2*Perso_Hero.vitesse, 35 + 2*Perso_Hero.vitesse), 2)
+
 # Affichage de chaque pnj / Mob et Sortie de la pièce courante
     for one_Pnj in CurrentMap.a_Pnj_List:
-        screen.blit(one_Pnj.aImage, (one_Pnj.aX - CurrentMap.a_XDecor, one_Pnj.aY - CurrentMap.a_YDecor))
+        screen.blit(one_Pnj.mouv(time), (one_Pnj.aX - CurrentMap.a_XDecor, one_Pnj.aY - CurrentMap.a_YDecor))
 
     for one_Mob in CurrentMap.a_Mob_List:
         if one_Mob.a_health > 0:
@@ -562,7 +957,7 @@ while not done:
     for one_Sortie in CurrentMap.a_Sortie_Liste:
         screen.blit(one_Sortie.a_Image, (one_Sortie.aX - CurrentMap.a_XDecor, one_Sortie.aY - CurrentMap.a_YDecor))
     for one_marchant in CurrentMap.a_Marchand_Liste:
-        screen.blit(one_marchant.aImage, (one_marchant.aX - CurrentMap.a_XDecor, one_marchant.aY - CurrentMap.a_YDecor))
+        screen.blit(one_marchant.image(time), (one_marchant.aX - CurrentMap.a_XDecor, one_marchant.aY - CurrentMap.a_YDecor))
         # Affichage du shop actuel
         if CurrentShop == Shop_Arme:
             pygame.draw.rect(screen, [0, 0, 0], [10, 10, 580, 580])
@@ -582,7 +977,7 @@ while not done:
 
     if Perso_Hero.actulvl():
         done_lvl = False
-        points_lvl = 10
+        points_lvl = 3
         while not done_lvl:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:  # If user clicked close
@@ -641,8 +1036,22 @@ while not done:
     screen.blit(expn_text, (0, 63))
     Health_text = Gold_font.render("Santé : " + str(Perso_Hero.a_health) + " / " + str(Perso_Hero.a_max_health), True, [255, 0, 0])
     screen.blit(Health_text, (0, 0))
+    for one_marchant in CurrentMap.a_Marchand_Liste:
+        # Affichage du shop actuel
+        if CurrentShop == Shop_Arme:
+            pygame.draw.rect(screen, [0, 0, 0], [10, 10, 580, 580])
+            pygame.draw.line(screen, [255, 255, 255], (10, 193), (589, 193))
+            pygame.draw.line(screen, [255, 255, 255], (10, 193*2), (589, 193*2))
+            Marchand_Arme.aShop.dessine(screen)
+
+        elif CurrentShop == Shop_Magie:
+            pygame.draw.rect(screen, [0, 0, 0], [10, 10, 580, 580])
+            pygame.draw.rect(screen, [0, 0, 0], [10, 10, 580, 580])
+            pygame.draw.line(screen, [255, 255, 255], (10, 193), (589, 193))
+            pygame.draw.line(screen, [255, 255, 255], (10, 193 * 2), (589, 193 * 2))
+            Marchand_Magie.aShop.dessine(screen)
     gold_text = Gold_font.render("Gold : " + str(Perso_Hero.a_gold), True, [255, 0, 255])
-    screen.blit(gold_text, (0, 570))
+    screen.blit(gold_text, (20, 565))
 
     # test pour chaque pnj si le joueur est assez proche pour afficher le dialogue
     for one_Pnj in CurrentMap.a_Pnj_List:
@@ -652,7 +1061,7 @@ while not done:
     if Perso_Hero.a_health <= 0:
         done = True
     # 60 fps
-    clock.tick(30)
+    clock.tick(60)
     # Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
 

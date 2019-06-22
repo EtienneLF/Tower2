@@ -1,7 +1,30 @@
 import random
-
+from os import path
+import os, inspect
+import pygame
 import Class.Perso
 
+
+# recherche du répertoire de travail
+scriptPATH = path.abspath(inspect.getsourcefile(lambda: 0))  # compatible interactive Python Shell
+scriptDIR = path.dirname(scriptPATH)
+scriptDIR = path.dirname(scriptPATH[0])
+scriptDIR = path.split(scriptDIR)[0]
+assets = path.join(scriptDIR, "data")
+
+
+#planche_sprites = pygame.image.load(os.path.join(assets, "Darknut.png"))
+#planche_sprites.set_colorkey((0,128,255))
+
+
+def EnnemiSprite(nb,id,dec_x,dec_y,tai_x,tai_y):
+   sprite = []
+   for i in range(nb):
+      spr = planche_sprites.subsurface((tai_x * i + dec_x , tai_y * id + dec_y , tai_x,tai_y))
+      test = spr.get_at((10,10))
+      if ( test != (255,0,0,255) ):
+         sprite.append( spr )
+   return sprite
 
 class Mob(Class.Perso.Perso):
     def __init__(self, px, py, p_health, p_image, p_vitesse, p_distance, p_xp, p_attaque):
@@ -16,6 +39,7 @@ class Mob(Class.Perso.Perso):
         self.xp = p_xp
         self.attack = p_attaque
         self.mode_a = False
+        self.gold = 5
 
     def getattack(self, p_hero, p_x, p_y):
         if self.aX - 10 < p_hero.aX + p_x < self.aX + self.aImage.get_width() + 10 and self.aY - 10 < p_hero.aY + p_y < self.aY + self.aImage.get_height() + 10:
