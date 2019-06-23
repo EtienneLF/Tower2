@@ -28,6 +28,8 @@ Selection_Screen = pygame.image.load(os.path.join(assets, "Selection de sexe.png
 
 Couleur_Screen = pygame.image.load(os.path.join(assets, "Selection Couleur.png"))
 
+fin_Screen = pygame.image.load(os.path.join(assets,"gameover.png"))
+
 # Charge les images des différentes map
 Map_Base_Image = pygame.image.load(os.path.join(assets, "cités.png"))
 Map_Glace_Image = pygame.image.load(os.path.join(assets, "Glace.PNG"))
@@ -58,7 +60,7 @@ Armure2 = Armure("Armure Enchantée", 10, 20, "Permet de réduire considérablem
 Armure2.a_Image = pygame.image.load(os.path.join(assets, "armure1.png"))
 Armure2.a_Image = pygame.transform.scale(Tee_shirt.a_Image, (100, 100))
 
-Bottesa = Bottes("Bottes Ailées", 10, 6, "Permet de courir sans effort")
+Bottesa = Bottes("Bottes Ailées", 10, 4, "Permet de courir sans effort")
 Bottesa.a_Image = pygame.image.load(os.path.join(assets, "botte1.png"))
 Bottesa.a_Image = pygame.transform.scale(Sandales.a_Image, (100, 100))
 
@@ -73,7 +75,8 @@ Marchand_Arme = MarchandArme(341, 218, "Marchand_Arme.png", Shop_Arme_Base)
 Marchand_Magie = MarchandMagie(490, 335, "Marchand_Magie.png", Shop_Magie_Base)
 
 # Pnj
-Megumin = PnjMouv(620, 545, "Megumin.png", "Bonjour", "Habitant")
+
+Megumin = PnjMouv(620, 545, "Megumin.png", "Des bandits rodent", "Habitant")
 
 # Mob
 Mob_1 = Mob(90, 790, 100, "Megumin.png", 2, 100, 10, 5)
@@ -179,8 +182,8 @@ ville_maison12 = Cailloux(255, 233)
 ville_eau1 = Cailloux(935, 451)
 ville_eau2 = Cailloux(950, 451)
 
-ville_cite1 = Cailloux(281, 639)
-ville_cite2 = Cailloux(281, 580)
+ville_cite1 = Cailloux(270, 639)
+ville_cite2 = Cailloux(270, 580)
 ville_cite3 = Cailloux(232, 580)
 ville_cite4 = Cailloux(183, 580)
 ville_cite5 = Cailloux(133, 580)
@@ -652,6 +655,23 @@ def volume():
 def stopGlissade(): #ne stoppe pas pour une raison obscure
     son_glisse.stop()
 
+#barre de vie
+
+def health_bar():
+    if Perso_Hero.a_health > 75 :
+        Perso_Hero.a_health_color = (0,255,0)
+    elif Perso_Hero.a_health > 50 :
+        Perso_Hero.a_health_color = (255,170,0)
+    else :
+        Perso_Hero.a_health_color = (254,0,15)
+    pygame.draw.rect(screen,Perso_Hero.a_health_color,(0,0,Perso_Hero.a_health,25))
+
+#barre d'xp
+
+def xp_bar():
+    a_xppourcent = Perso_Hero.a_exp * 100 / Perso_Hero.a_exp_lvl_need
+    pygame.draw.rect(screen,(255,4,177),(0,25,a_xppourcent,25))
+
 # set police for text
 text_font = pygame.font.SysFont("arial", 50)
 Gold_font = pygame.font.SysFont("arial", 20)
@@ -1063,6 +1083,9 @@ while not done:
     # pygame.draw.rect(screen, (255, 0, 255), (Perso_Hero.aX - Perso_Hero.vitesse, Perso_Hero.aY - Perso_Hero.vitesse, 33 + 2*Perso_Hero.vitesse, 35 + 2*Perso_Hero.vitesse), 2)
 
     if Perso_Hero.a_health <= 0:
+        screen.blit(fin_Screen, (0, 0))
+        pygame.display.flip()
+        temps.sleep(3)
         Perso_Hero.a_health = 100
         CurrentMap = Map_Base
         CurrentMap.a_XDecor = 250
@@ -1075,44 +1098,6 @@ while not done:
 # Affichage de chaque pnj / Mob et Sortie de la pièce courante
     for one_Pnj in CurrentMap.a_Pnj_List:
         screen.blit(one_Pnj.mouv(time), (one_Pnj.aX - CurrentMap.a_XDecor, one_Pnj.aY - CurrentMap.a_YDecor))
-
-    for one_Mob in CurrentMap.a_Mob_List:
-        if one_Mob.a_health > 0:
-            one_Mob.move(Perso_Hero.aX + CurrentMap.a_XDecor, Perso_Hero.aY + CurrentMap.a_YDecor)
-            one_Mob.attaque(Perso_Hero, CurrentMap.a_XDecor, CurrentMap.a_YDecor)
-            screen.blit(one_Mob.imagequel(time), (one_Mob.aX - CurrentMap.a_XDecor, one_Mob.aY - CurrentMap.a_YDecor))
-        else:
-            Perso_Hero.a_exp += one_Mob.xp
-            Perso_Hero.a_gold += one_Mob.gold
-            playSound("mortennemi2.wav")
-            if one_Mob == Boss_mob:
-                GG_text = GG_Font.render("Bravo vous avez terminé ! ", True, [255, 0, 0])
-                screen.blit(GG_text, (50, 200))
-                pygame.display.flip()
-                temps.sleep(5)
-                play = 0
-                pygame.quit()
-            CurrentMap.a_Mob_List.remove(one_Mob)
-    #for one_Sortie in CurrentMap.a_Sortie_Liste:
-       # screen.blit(one_Sortie.a_Image, (one_Sortie.aX - CurrentMap.a_XDecor, one_Sortie.aY - CurrentMap.a_YDecor))
-    for one_marchant in CurrentMap.a_Marchand_Liste:
-        screen.blit(one_marchant.image(time), (one_marchant.aX - CurrentMap.a_XDecor, one_marchant.aY - CurrentMap.a_YDecor))
-        # Affichage du shop actuel
-        if CurrentShop == Shop_Arme:
-            pygame.draw.rect(screen, [0, 0, 0], [10, 10, 580, 580])
-            pygame.draw.line(screen, [255, 255, 255], (10, 193), (589, 193))
-            pygame.draw.line(screen, [255, 255, 255], (10, 193*2), (589, 193*2))
-            Marchand_Arme.aShop.dessine(screen)
-
-        elif CurrentShop == Shop_Magie:
-            pygame.draw.rect(screen, [0, 0, 0], [10, 10, 580, 580])
-            pygame.draw.rect(screen, [0, 0, 0], [10, 10, 580, 580])
-            pygame.draw.line(screen, [255, 255, 255], (10, 193), (589, 193))
-            pygame.draw.line(screen, [255, 255, 255], (10, 193 * 2), (589, 193 * 2))
-            Marchand_Magie.aShop.dessine(screen)
-
-    #for onecailloux in CurrentMap.a_Tab_Hitbox:
-     #   pygame.draw.rect(screen, (255, 0, 0), (onecailloux.affiche_aX, onecailloux.affiche_aY, 50, 60), 2)
 
     if Perso_Hero.actulvl():
         done_lvl = False
@@ -1167,14 +1152,56 @@ while not done:
             if points_lvl <= 0:
                 done_lvl = True
 
-    lvl_text = Gold_font.render("Niveau : " + str(Perso_Hero.a_lvl), True, [255, 0, 0])
-    screen.blit(lvl_text, (0, 21))
-    exp_text = Gold_font.render("Expérience : " + str(Perso_Hero.a_exp), True, [255, 0, 0])
-    screen.blit(exp_text, (0, 42))
-    expn_text = Gold_font.render("Prochain niveau à : " + str(Perso_Hero.a_exp_lvl_need) + " points d'éxpérience", True, [255, 0, 0])
-    screen.blit(expn_text, (0, 63))
-    Health_text = Gold_font.render("Santé : " + str(Perso_Hero.a_health) + " / " + str(Perso_Hero.a_max_health), True, [255, 0, 0])
-    screen.blit(Health_text, (0, 0))
+    for one_Mob in CurrentMap.a_Mob_List:
+        if one_Mob.a_health > 0:
+            one_Mob.move(Perso_Hero.aX + CurrentMap.a_XDecor, Perso_Hero.aY + CurrentMap.a_YDecor)
+            one_Mob.attaque(Perso_Hero, CurrentMap.a_XDecor, CurrentMap.a_YDecor)
+            screen.blit(one_Mob.imagequel(time), (one_Mob.aX - CurrentMap.a_XDecor, one_Mob.aY - CurrentMap.a_YDecor))
+        else:
+            Perso_Hero.a_exp += one_Mob.xp
+            Perso_Hero.a_gold += one_Mob.gold
+            playSound("mortennemi2.wav")
+            if one_Mob == Boss_mob:
+                GG_text = GG_Font.render("Bravo vous avez terminé ! ", True, [255, 0, 0])
+                screen.blit(GG_text, (50, 200))
+                pygame.display.flip()
+                temps.sleep(5)
+                play = 0
+                done = True
+            CurrentMap.a_Mob_List.remove(one_Mob)
+    #for one_Sortie in CurrentMap.a_Sortie_Liste:
+       # screen.blit(one_Sortie.a_Image, (one_Sortie.aX - CurrentMap.a_XDecor, one_Sortie.aY - CurrentMap.a_YDecor))
+    for one_marchant in CurrentMap.a_Marchand_Liste:
+        screen.blit(one_marchant.image(time), (one_marchant.aX - CurrentMap.a_XDecor, one_marchant.aY - CurrentMap.a_YDecor))
+        # Affichage du shop actuel
+        if CurrentShop == Shop_Arme:
+            pygame.draw.rect(screen, [0, 0, 0], [10, 10, 580, 580])
+            pygame.draw.line(screen, [255, 255, 255], (10, 193), (589, 193))
+            pygame.draw.line(screen, [255, 255, 255], (10, 193*2), (589, 193*2))
+            Marchand_Arme.aShop.dessine(screen)
+
+        elif CurrentShop == Shop_Magie:
+            pygame.draw.rect(screen, [0, 0, 0], [10, 10, 580, 580])
+            pygame.draw.rect(screen, [0, 0, 0], [10, 10, 580, 580])
+            pygame.draw.line(screen, [255, 255, 255], (10, 193), (589, 193))
+            pygame.draw.line(screen, [255, 255, 255], (10, 193 * 2), (589, 193 * 2))
+            Marchand_Magie.aShop.dessine(screen)
+
+   # for onecailloux in CurrentMap.a_Tab_Hitbox:
+    #   pygame.draw.rect(screen, (255, 0, 0), (onecailloux.affiche_aX, onecailloux.affiche_aY, 50, 60), 2)
+
+    lvl_text = Gold_font.render("Niveau : " + str(Perso_Hero.a_lvl), True, [0, 0, 0])
+    screen.blit(lvl_text, (0, 45))
+    expn_text = Gold_font.render("Prochain niveau à : " + str(Perso_Hero.a_exp_lvl_need) + " points d'éxpérience", True,
+                                 [0, 0, 0])
+    screen.blit(expn_text, (0, 65))
+    hp_text = Gold_font.render("Hp", True, [0, 0, 0])
+    health_bar()
+    screen.blit(hp_text, (0, 0))
+    xp_text = Gold_font.render("Xp", True, [0, 0, 0])
+    xp_bar()
+    screen.blit(xp_text, (0, 25))
+
     for one_marchant in CurrentMap.a_Marchand_Liste:
         # Affichage du shop actuel
         if CurrentShop == Shop_Arme:
@@ -1194,7 +1221,7 @@ while not done:
 
     # test pour chaque pnj si le joueur est assez proche pour afficher le dialogue
     for one_Pnj in CurrentMap.a_Pnj_List:
-        zone_text = text_font.render(Perso_Hero.dialogue(one_Pnj, CurrentMap.a_XDecor, CurrentMap.a_YDecor), True, [255, 255, 0])
+        zone_text = text_font.render(Perso_Hero.dialogue(one_Pnj, CurrentMap.a_XDecor, CurrentMap.a_YDecor), True, [0, 0, 0])
         screen.blit(zone_text, (0, 500))
 
 
