@@ -16,6 +16,10 @@ from Class.Shop import Shop
 scriptPATH = os.path.abspath(inspect.getsourcefile(lambda: 0))  # compatible interactive Python Shell
 scriptDIR = os.path.dirname(scriptPATH)
 assets = os.path.join(scriptDIR, "data")
+sound = os.path.join(scriptDIR, "sound")
+music = os.path.join(scriptDIR, "music")
+
+pygame.mixer.pre_init(44100, 16, 2, 4096)
 
 # Image du title screen
 Title_Screen = pygame.image.load(os.path.join(assets, "TitleScreenV1.png"))
@@ -533,6 +537,7 @@ Marche = 7
 Homme = 10
 Femme = 20
 
+
 # Fonction pour verifier la hitbox
 
 
@@ -617,7 +622,35 @@ def isSliding(perso):
 
 ###################################################################################
 # Initialize pygame
+
 pygame.init()
+play = 0
+
+
+def playMusic(file, play):
+    if (play != 1):
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load(os.path.join(music, file))
+        pygame.mixer.music.play(-1)
+
+
+def playSound(file):
+    pygame.mixer.Sound(os.path.join(sound, file)).play()
+
+
+son_glisse = pygame.mixer.Sound(os.path.join(sound, "glissade.wav"))
+
+
+def playGlissade():
+    son_glisse.play()
+
+
+def volume():
+    pygame.mixer.Sound.set_volume(pygame.mixer.Sound(os.path.join(sound, "glissade.wav")), 1.0)
+
+
+def stopGlissade(): #ne stoppe pas pour une raison obscure
+    son_glisse.stop()
 
 # set police for text
 text_font = pygame.font.SysFont("arial", 50)
@@ -641,8 +674,6 @@ done4 = False
 clock = pygame.time.Clock()
 
 pygame.mouse.set_visible(1)
-
-
 # Programme principal
 while not done:
 
@@ -716,6 +747,29 @@ while not done:
 
     time = int(pygame.time.get_ticks() / 100)
 
+    # musique
+    if (CurrentMap == Map_Base):
+        playMusic("Town1.mp3", play)
+        play = 1
+    if (CurrentMap == Shop_Map):
+        playMusic("Shop2.mp3", play)
+        play = 1
+    if (CurrentMap == Shop2_Map):
+        playMusic("Shop1.mp3", play)
+        play = 1
+    if (CurrentMap == Plaine_Map):
+        playMusic("Plains1.mp3", play)
+        play = 1
+    if (CurrentMap == Map_Glace):
+        playMusic("Ice Path.mp3", play)
+        play = 1
+    if (CurrentMap == Glace2_Map):
+        playMusic("BattleMusic3.mp3", play)
+        play = 1
+    if (CurrentMap == Map_Boss):
+        playMusic("BattleMusic5.mp3", play)
+        play = 1
+
     # Déplacement du Hero si il n'est pas entrain de faire une autre action
     if Perso_Hero.a_Duree == 0:
 
@@ -728,11 +782,14 @@ while not done:
         # if ne glisse pas, alors on gère toutes les directions
 
         if Perso_Hero.a_etat == "marche":
+            stopGlissade()
             if KeysPressed[pygame.K_UP] and collision[3] is False:
                 Perso_Hero.a_Etat = Marche
                 Perso_Hero.a_dir = Haut
                 if isSliding(Perso_Hero) is True and CurrentMap == Map_Glace:
                     Perso_Hero.a_etat = "slide_up"
+                    volume()
+                    playGlissade()
                 if collision_vitesse[3] is not False:
                     Perso_Hero.aY = collision_vitesse[3] - CurrentMap.a_YDecor + 1
                 else:
@@ -751,6 +808,8 @@ while not done:
                 Perso_Hero.a_dir = Bas
                 if isSliding(Perso_Hero) is True and CurrentMap == Map_Glace:
                     Perso_Hero.a_etat = "slide_down"
+                    volume()
+                    playGlissade()
                 if collision_vitesse[1] is not False:
                     Perso_Hero.aY = collision_vitesse[1] - 33 - CurrentMap.a_YDecor - 1
                 else:
@@ -769,6 +828,8 @@ while not done:
                 Perso_Hero.a_dir = Gauche
                 if isSliding(Perso_Hero) is True and CurrentMap == Map_Glace:
                     Perso_Hero.a_etat = "slide_left"
+                    volume()
+                    playGlissade()
                 if collision_vitesse[2] is not False:
                     Perso_Hero.aX = collision_vitesse[2] - CurrentMap.a_XDecor + 1
                 else:
@@ -787,6 +848,8 @@ while not done:
                 Perso_Hero.a_dir = Droite
                 if isSliding(Perso_Hero) is True and CurrentMap == Map_Glace:
                     Perso_Hero.a_etat = "slide_right"
+                    volume()
+                    playGlissade()
                 if collision_vitesse[0] is not False:
                     Perso_Hero.aX = collision_vitesse[0] - 35 - CurrentMap.a_XDecor - 1
                 else:
@@ -803,8 +866,10 @@ while not done:
             if collision_vitesse[3] is not False:
                 Perso_Hero.aY = collision_vitesse[3] - CurrentMap.a_YDecor + 1
                 Perso_Hero.a_etat = "marche"
+                stopGlissade()
             elif not isSliding(Perso_Hero):
                 Perso_Hero.a_etat = "marche"
+                stopGlissade()
             else:
                 if Perso_Hero.aY > screenHeight / 2 - 25:
                     Perso_Hero.aY -= Perso_Hero.vitesse
@@ -820,8 +885,10 @@ while not done:
             if collision_vitesse[1] is not False:
                 Perso_Hero.aY = collision_vitesse[1] - 33 - CurrentMap.a_YDecor - 1
                 Perso_Hero.a_etat = "marche"
+                stopGlissade()
             elif not isSliding(Perso_Hero):
                 Perso_Hero.a_etat = "marche"
+                stopGlissade()
             else:
                 if Perso_Hero.aY < screenHeight / 2 - 25:
                     Perso_Hero.aY += Perso_Hero.vitesse
@@ -837,8 +904,10 @@ while not done:
             if collision_vitesse[2] is not False:
                 Perso_Hero.aX = collision_vitesse[2] - CurrentMap.a_XDecor + 1
                 Perso_Hero.a_etat = "marche"
+                stopGlissade()
             elif not isSliding(Perso_Hero):
                 Perso_Hero.a_etat = "marche"
+                stopGlissade()
             else:
                 if Perso_Hero.aX > screenWidth / 2 - 25:
                     Perso_Hero.aX -= Perso_Hero.vitesse
@@ -854,8 +923,10 @@ while not done:
             if collision_vitesse[0] is not False:
                 Perso_Hero.aX = collision_vitesse[0] - 35 - CurrentMap.a_XDecor - 1
                 Perso_Hero.a_etat = "marche"
+                stopGlissade()
             elif not isSliding(Perso_Hero):
                 Perso_Hero.a_etat = "marche"
+                stopGlissade()
             else:
                 if Perso_Hero.aX < screenWidth / 2 - 25:
                     Perso_Hero.aX += Perso_Hero.vitesse
@@ -881,15 +952,19 @@ while not done:
     if Perso_Hero.aX < 0:
         Perso_Hero.aX = 0
         Perso_Hero.a_etat = "marche"
+        stopGlissade()
     if Perso_Hero.aY < 0:
         Perso_Hero.aY = 0
         Perso_Hero.a_etat = "marche"
+        stopGlissade()
     if Perso_Hero.aX + 35 > screenWidth:
         Perso_Hero.aX = screenWidth - 35
         Perso_Hero.a_etat = "marche"
+        stopGlissade()
     if Perso_Hero.aY + 33 > screenHeight:
         Perso_Hero.aY = screenHeight - 33
         Perso_Hero.a_etat = "marche"
+        stopGlissade()
     hero_hitbox = (Perso_Hero.aX, Perso_Hero.aY, 33, 35)
 
 # Affiche les hitbox des cailloux
@@ -961,8 +1036,10 @@ while not done:
         # Test si clic gauche, si oui met le sprite attaque et test si un mob est proche
         if event.type == pygame.MOUSEBUTTONDOWN and Perso_Hero.a_Duree == 0:
             Perso_Hero.attaque()
+            playSound("epeejoueur2.wav")
             for one_Mob in CurrentMap.a_Mob_List:
                 one_Mob.getattack(Perso_Hero, CurrentMap.a_XDecor, CurrentMap.a_YDecor)
+                playSound("attaqueennemi2.wav")
 
 # Test si le perso est proche de la sortie, si oui le change de salle
     for one_Sortie in CurrentMap.a_Sortie_Liste:
@@ -973,6 +1050,7 @@ while not done:
             CurrentMap.a_YDecor = one_Sortie.aY_Decor
             Perso_Hero.aX = one_Sortie.aX_Perso
             Perso_Hero.aY = one_Sortie.aY_Perso
+            play = 0
 
 # Fond + caméra
     ZoneCam = pygame.Rect(CurrentMap.a_XDecor, CurrentMap.a_YDecor, screenWidth, screenHeight)
@@ -992,6 +1070,7 @@ while not done:
         Perso_Hero.aX = 250
         Perso_Hero.aY = 315
         Fond = CurrentMap.a_Image
+        play = 0
 
 # Affichage de chaque pnj / Mob et Sortie de la pièce courante
     for one_Pnj in CurrentMap.a_Pnj_List:
@@ -1005,11 +1084,13 @@ while not done:
         else:
             Perso_Hero.a_exp += one_Mob.xp
             Perso_Hero.a_gold += one_Mob.gold
+            playSound("mortennemi2.wav")
             if one_Mob == Boss_mob:
                 GG_text = GG_Font.render("Bravo vous avez terminé ! ", True, [255, 0, 0])
                 screen.blit(GG_text, (50, 200))
                 pygame.display.flip()
                 temps.sleep(5)
+                play = 0
                 pygame.quit()
             CurrentMap.a_Mob_List.remove(one_Mob)
     #for one_Sortie in CurrentMap.a_Sortie_Liste:
